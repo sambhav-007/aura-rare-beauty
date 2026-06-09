@@ -46,6 +46,62 @@ class ShadeController {
     }
   }
 
+  // POST /api/shades/bulk (admin) -> create many shades at once.
+  // body: { product, shades:[{name, price?, mrp?}], price, mrp, status }
+  async bulkCreate(req, res) {
+    try {
+      const { product, shades, price, mrp, status } = req.body;
+      if (!product || !Array.isArray(shades) || !shades.length) {
+        return res
+          .status(400)
+          .json({ error: "Product and a non-empty shades list are required" });
+      }
+      const seen = new Set();
+      const docs = [];
+      for (const s of shades) {
+        if (!s || !s.name) continue;
+        let slug = await uniqueSlug(Shade, s.name);
+        while (seen.has(slug)) slug = `${slug}-x`;
+        seen.add(slug);
+        docs.push({
+          product,
+          name: s.name,
+          slug,
+          price: s.price !== undefined ? s.price : price || 0,
+          mrp: s.mrp !== undefined ? s.mrp : mrp,
+          status: status || "Active",
+          images: [],
+        });
+      }
+      const created = await Shade.insertMany(docs);
+      return res.json({ success: `${created.length} shades created`, created });
+    } catch (err) {
+      return res.status(500).json({ error: "Failed to bulk create shades" });
+    }
+  }
+
+  // PATCH /api/shades/bulk (admin) -> set price/mrp/status on many shades.
+  // body: { ids:[], price?, mrp?, status? }
+  async bulkUpdate(req, res) {
+    try {
+      const { ids, price, mrp, status } = req.body;
+      if (!Array.isArray(ids) || !ids.length) {
+        return res.status(400).json({ error: "ids list is required" });
+      }
+      const set = {};
+      if (price !== undefined) set.price = price;
+      if (mrp !== undefined) set.mrp = mrp;
+      if (status !== undefined) set.status = status;
+      if (!Object.keys(set).length) {
+        return res.status(400).json({ error: "Nothing to update" });
+      }
+      const result = await Shade.updateMany({ _id: { $in: ids } }, { $set: set });
+      return res.json({ success: "Shades updated", modified: result.nModified });
+    } catch (err) {
+      return res.status(500).json({ error: "Failed to bulk update shades" });
+    }
+  }
+
   // PUT /api/shades/:id (admin) -> updates fields, appends any new images
   async update(req, res) {
     try {

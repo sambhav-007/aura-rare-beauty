@@ -1,6 +1,17 @@
 import DashboardAdmin from "./dashboardAdmin";
 import Categories from "./categories";
 import Products from "./products";
-import Orders from "./orders";
+import ShadeManager from "./shades";
+import Banners from "./banners";
+import Reviews from "./reviews";
+import Settings from "./settings";
 
-export { DashboardAdmin, Categories, Products, Orders };
+export {
+  DashboardAdmin,
+  Categories,
+  Products,
+  ShadeManager,
+  Banners,
+  Reviews,
+  Settings,
+};

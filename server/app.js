@@ -21,6 +21,7 @@ const reviewRouter = require("./routes/reviews");
 const bannerRouter = require("./routes/banners");
 const settingsRouter = require("./routes/settings");
 const searchRouter = require("./routes/search");
+const statsRouter = require("./routes/stats");
 
 /*
  * SOFT-DEPRECATED (disconnected, files retained until full storefront/admin
@@ -54,6 +55,7 @@ app.use("/api/reviews", reviewRouter);
 app.use("/api/banners", bannerRouter);
 app.use("/api/settings", settingsRouter);
 app.use("/api/search", searchRouter);
+app.use("/api/stats", statsRouter);
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 

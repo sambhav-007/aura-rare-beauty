@@ -14,7 +14,19 @@ class ProductController {
       if (req.query.featured === "true") filter.isFeatured = true;
       const products = await Product.find(filter)
         .populate("category", "name slug")
-        .sort({ _id: -1 });
+        .sort({ _id: -1 })
+        .lean();
+      // Attach shade counts in one aggregate (admin products table needs them).
+      const counts = await Shade.aggregate([
+        { $group: { _id: "$product", count: { $sum: 1 } } },
+      ]);
+      const countMap = counts.reduce((m, c) => {
+        m[c._id] = c.count;
+        return m;
+      }, {});
+      products.forEach((p) => {
+        p.shadeCount = countMap[p._id] || 0;
+      });
       return res.json({ products });
     } catch (err) {
       return res.status(500).json({ error: "Failed to load products" });
