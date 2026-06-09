@@ -1,3 +1,4 @@
+/* @deprecated Aura Rare uses WhatsApp checkout, not payments. Disconnected from app.js; pending deletion. */
 var braintree = require("braintree");
 require("dotenv").config();
 

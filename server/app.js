@@ -1,20 +1,8 @@
-/* 
-
-================== Most Important ==================
-* Issue 1 :
-In uploads folder you need create 3 folder like bellow.
-Folder structure will be like: 
-public -> uploads -> 1. products 2. customize 3. categories
-*** Now This folder will automatically create when we run the server file
-
-* Issue 2:
-For admin signup just go to the auth 
-controller then newUser obj, you will 
-find a role field. role:1 for admin signup & 
-role: 0 or by default it for customer signup.
-go user model and see the role field.
-
-*/
+/*
+ * Aura Rare API server.
+ * Images are stored on Cloudinary (no local uploads folder).
+ * Admin signup: see controller/auth.js (userRole: 1 = admin).
+ */
 
 const express = require("express");
 const app = express();
@@ -24,20 +12,21 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
-// Import Router
-const authRouter = require("./routes/auth");
+// Active routers (Aura Rare architecture)
+const authRouter = require("./routes/auth"); // admin login
 const categoryRouter = require("./routes/categories");
 const productRouter = require("./routes/products");
-const brainTreeRouter = require("./routes/braintree");
-const orderRouter = require("./routes/orders");
-const usersRouter = require("./routes/users");
-const customizeRouter = require("./routes/customize");
-// Import Auth middleware for check user login or not~
-const { loginCheck } = require("./middleware/auth");
-const CreateAllFolder = require("./config/uploadFolderCreateScript");
+const shadeRouter = require("./routes/shades");
+const reviewRouter = require("./routes/reviews");
+const bannerRouter = require("./routes/banners");
+const settingsRouter = require("./routes/settings");
+const searchRouter = require("./routes/search");
 
-/* Create All Uploads Folder if not exists | For Uploading Images */
-CreateAllFolder();
+/*
+ * SOFT-DEPRECATED (disconnected, files retained until full storefront/admin
+ * cutover is verified): braintree, orders, customize, users routers.
+ * Do not re-enable — see docs/AURA_RARE_ARCHITECTURE.md.
+ */
 
 // Database Connection
 mongoose
@@ -46,32 +35,28 @@ mongoose
     useUnifiedTopology: true,
     useCreateIndex: true,
   })
-  .then(() =>
-    console.log(
-      "==============Mongodb Database Connected Successfully=============="
-    )
-  )
-  .catch((err) => console.log("Database Not Connected !!!"));
+  .then(() => console.log("==== MongoDB Connected ===="))
+  .catch((err) => console.log("Database Not Connected !!!", err.message));
 
 // Middleware
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(cors());
-app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // Routes
 app.use("/api", authRouter);
-app.use("/api/user", usersRouter);
-app.use("/api/category", categoryRouter);
-app.use("/api/product", productRouter);
-app.use("/api", brainTreeRouter);
-app.use("/api/order", orderRouter);
-app.use("/api/customize", customizeRouter);
+app.use("/api/categories", categoryRouter);
+app.use("/api/products", productRouter);
+app.use("/api/shades", shadeRouter);
+app.use("/api/reviews", reviewRouter);
+app.use("/api/banners", bannerRouter);
+app.use("/api/settings", settingsRouter);
+app.use("/api/search", searchRouter);
+
+app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
 // Run Server
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-  console.log("Server is running on ", PORT);
-});
+app.listen(PORT, () => console.log("Server is running on", PORT));

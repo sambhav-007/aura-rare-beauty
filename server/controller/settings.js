@@ -1,0 +1,52 @@
+const StoreSettings = require("../models/storeSettings");
+const { toImage } = require("../config/uploadCloud");
+const { destroyAssets } = require("../config/cloudinary");
+
+const EDITABLE = [
+  "storeName",
+  "whatsappNumber",
+  "address",
+  "aboutUs",
+  "contactEmail",
+  "contactPhone",
+  "instagramUrl",
+  "facebookUrl",
+  "heroHeading",
+  "heroSubheading",
+];
+
+class SettingsController {
+  // GET /api/settings -> the singleton (auto-created on first read)
+  async get(req, res) {
+    try {
+      let settings = await StoreSettings.findOne({});
+      if (!settings) settings = await StoreSettings.create({});
+      return res.json({ settings });
+    } catch (err) {
+      return res.status(500).json({ error: "Failed to load settings" });
+    }
+  }
+
+  // PUT /api/settings (admin, optional heroImage)
+  async update(req, res) {
+    try {
+      let settings = await StoreSettings.findOne({});
+      if (!settings) settings = await StoreSettings.create({});
+      EDITABLE.forEach((key) => {
+        if (req.body[key] !== undefined) settings[key] = req.body[key];
+      });
+      if (req.file) {
+        const oldId = settings.heroImage && settings.heroImage.publicId;
+        settings.heroImage = toImage(req.file);
+        if (oldId) await destroyAssets(oldId);
+      }
+      await settings.save();
+      return res.json({ success: "Settings updated", settings });
+    } catch (err) {
+      if (req.file) await destroyAssets(req.file.filename);
+      return res.status(500).json({ error: "Failed to update settings" });
+    }
+  }
+}
+
+module.exports = new SettingsController();

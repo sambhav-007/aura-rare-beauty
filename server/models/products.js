@@ -1,58 +1,20 @@
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema.Types;
+const { imageSchema } = require("./_image");
 
+// A Product is a named collection of shades (e.g. "Smile & Shine").
+// Shades (the purchasable units) live in their own collection, referencing this.
 const productSchema = new mongoose.Schema(
   {
-    pName: {
-      type: String,
-      required: true,
-    },
-    pDescription: {
-      type: String,
-      required: true,
-    },
-    pPrice: {
-      type: Number,
-      required: true,
-    },
-    pSold: {
-      type: Number,
-      default: 0,
-    },
-    pQuantity: {
-      type: Number,
-      default: 0,
-    },
-    pCategory: {
-      type: ObjectId,
-      ref: "categories",
-    },
-    pImages: {
-      type: Array,
-      required: true,
-    },
-    pOffer: {
-      type: String,
-      default: null,
-    },
-    pRatingsReviews: [
-      {
-        review: String,
-        user: { type: ObjectId, ref: "users" },
-        rating: String,
-        createdAt: {
-          type: Date,
-          default: Date.now(),
-        },
-      },
-    ],
-    pStatus: {
-      type: String,
-      required: true,
-    },
+    name: { type: String, required: true, trim: true },
+    slug: { type: String, required: true, unique: true, index: true },
+    description: { type: String, default: "" },
+    category: { type: ObjectId, ref: "categories", required: true, index: true },
+    coverImage: { type: imageSchema, default: null },
+    isFeatured: { type: Boolean, default: false, index: true },
+    status: { type: String, enum: ["Active", "Disabled"], default: "Active" },
   },
   { timestamps: true }
 );
 
-const productModel = mongoose.model("products", productSchema);
-module.exports = productModel;
+module.exports = mongoose.model("products", productSchema);

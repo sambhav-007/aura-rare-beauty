@@ -1,3 +1,4 @@
+/* @deprecated Aura Rare has no backend orders (WhatsApp checkout). Disconnected from app.js; pending deletion. */
 const orderModel = require("../models/orders");
 
 class Order {

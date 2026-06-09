@@ -1,3 +1,4 @@
+/* @deprecated Replaced by banners + settings controllers. Disconnected from app.js; pending deletion. */
 const fs = require("fs");
 const categoryModel = require("../models/categories");
 const productModel = require("../models/products");

@@ -1,25 +1,16 @@
 const mongoose = require("mongoose");
+const { imageSchema } = require("./_image");
 
 const categorySchema = new mongoose.Schema(
   {
-    cName: {
-      type: String,
-      required: true,
-    },
-    cDescription: {
-      type: String,
-      required: true,
-    },
-    cImage: {
-      type: String,
-    },
-    cStatus: {
-      type: String,
-      required: true,
-    },
+    name: { type: String, required: true, trim: true },
+    slug: { type: String, required: true, unique: true, index: true },
+    description: { type: String, default: "" },
+    image: { type: imageSchema, default: null },
+    status: { type: String, enum: ["Active", "Disabled"], default: "Active" },
+    order: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
 
-const categoryModel = mongoose.model("categories", categorySchema);
-module.exports = categoryModel;
+module.exports = mongoose.model("categories", categorySchema);

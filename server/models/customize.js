@@ -1,3 +1,4 @@
+/* @deprecated Replaced by banners + storeSettings models. Unused; pending deletion. */
 const mongoose = require("mongoose");
 
 const customizeSchema = new mongoose.Schema(

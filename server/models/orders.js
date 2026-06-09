@@ -1,3 +1,4 @@
+/* @deprecated No order workflow in Aura Rare. Unused; pending deletion. */
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema.Types;
 

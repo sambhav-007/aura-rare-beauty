@@ -28,6 +28,15 @@ exports.isAuth = (req, res, next) => {
   next();
 };
 
+// Token-based admin guard. Use after loginCheck: relies on the decoded
+// JWT payload ({ _id, role }) so no loggedInUserId in the body is needed.
+exports.adminCheck = (req, res, next) => {
+  if (!req.userDetails || req.userDetails.role !== 1) {
+    return res.status(403).json({ error: "Admin access only" });
+  }
+  next();
+};
+
 exports.isAdmin = async (req, res, next) => {
   try {
     let reqUser = await userModel.findById(req.body.loggedInUserId);
