@@ -1,13 +1,6 @@
-# Hayroo Project Demo
+# Aura Rare Beauty E-commerce Store
 
-[![Alt text](https://img.youtube.com/vi/lXk14qt2D28/0.jpg)](https://www.youtube.com/watch?v=lXk14qt2D28)
 
-# 🎥 Learn FullStack Development by building a LMS With React, NodeJs, PostgreSQL, Redis & Deployment -> Watch here: 
-- ▶️ Part 1: [https://youtu.be/942PSbDTXgo](https://youtu.be/942PSbDTXgo)
-- ▶️ Part 2: [https://youtu.be/7qP-xAnQhLc](https://youtu.be/7qP-xAnQhLc)
-- ▶️ Part 3: [https://youtu.be/TH5K2ebqar8](https://youtu.be/TH5K2ebqar8)
-- ▶️ Final Part: [https://youtu.be/\_-w6VZlO30Y](https://youtu.be/_-w6VZlO30Y)
-- ▶️ Deployment: [https://youtu.be/IVfM_tpFlUc](https://youtu.be/IVfM_tpFlUc)
 
 ## Getting Started
 
@@ -21,34 +14,6 @@ NPM / Yarn and Node.js installed
 
 In the server > .env file, you can find some information. Please use your own API key for future use, as this key may not work in the future.
 
-```
-BRAINTREE_MERCHANT_ID=your_id
-BRAINTREE_PUBLIC_KEY=your_public_key
-BRAINTREE_PRIVATE_KEY=your_private_key
-```
-
-### 🔑 Getting Braintree API Keys
-
-To enable payment functionality, you need to configure your own Braintree API credentials.
-
-#### Steps to get your Braintree API keys
-
-1. Go to the official Braintree website: [https://www.braintreepayments.com/](https://www.braintreepayments.com/)
-2. Create a **free Sandbox account** at [https://sandbox.braintreegateway.com/](https://sandbox.braintreegateway.com/)
-3. After logging in, navigate to:  
-   **Account → Settings → API → API Keys**
-4. Click **“Generate New API Key”** if none exists.
-5. Copy your credentials:
-   - **Merchant ID**
-   - **Public Key**
-   - **Private Key**
-6. Add them to your `.env` file (inside the `server` folder):
-
-   ```bash
-   BRAINTREE_MERCHANT_ID=your_merchant_id_here
-   BRAINTREE_PUBLIC_KEY=your_public_key_here
-   BRAINTREE_PRIVATE_KEY=your_private_key_here
-   ```
 
 ### Installing
 
@@ -112,4 +77,4 @@ Follow these setps 👇👇
 
 You can deploy frontend into vercel or netlify also. Thanks
 
-`Build with 💛 by Hasan`
+`Build with 💛 by Sambhav`
