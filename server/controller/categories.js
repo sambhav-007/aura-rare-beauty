@@ -4,6 +4,7 @@ const { uniqueSlug } = require("../config/slug");
 const { toImage } = require("../config/uploadCloud");
 const { destroyAssets } = require("../config/cloudinary");
 const { deleteProductById } = require("../config/cascade");
+const { attachShadeStats } = require("../config/shadeStats");
 
 class CategoryController {
   // GET /api/categories  -> all categories, ordered
@@ -24,7 +25,10 @@ class CategoryController {
       const products = await Product.find({
         category: category._id,
         status: "Active",
-      }).sort({ _id: -1 });
+      })
+        .sort({ _id: -1 })
+        .lean();
+      await attachShadeStats(products);
       return res.json({ category, products });
     } catch (err) {
       return res.status(500).json({ error: "Failed to load category" });
