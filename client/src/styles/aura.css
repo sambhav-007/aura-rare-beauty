@@ -49,7 +49,8 @@ body,
   font-size: 0.72rem;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: var(--accent);
+  /* darker accent at small sizes for WCAG AA contrast on cream */
+  color: var(--accent-hover);
   font-weight: 500;
 }
 
@@ -159,7 +160,7 @@ body,
 .swatch {
   width: 100%;
   aspect-ratio: 1 / 1;
-  border-radius: 6px;
+  border-radius: 4px;
   background: var(--sand) center/cover no-repeat;
   border: 1px solid var(--hairline);
   cursor: pointer;
@@ -177,6 +178,26 @@ body,
 .price-strike { color: var(--muted); text-decoration: line-through; }
 
 ::selection { background: var(--accent); color: #fff; }
+
+/* ---------- Accessibility: visible keyboard focus ---------- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+.swatch:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---------- Hero fallback texture (until photography arrives) ---------- */
+.hero-fallback {
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 30%, rgba(184, 138, 90, 0.12), transparent 60%),
+    radial-gradient(ellipse 50% 60% at 20% 80%, rgba(184, 138, 90, 0.08), transparent 55%),
+    linear-gradient(120deg, var(--sand) 0%, var(--cream) 100%);
+}
 
 /* ---------- Inputs ---------- */
 .lux-input {

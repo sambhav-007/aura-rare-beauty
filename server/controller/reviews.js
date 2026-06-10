@@ -24,6 +24,13 @@ class ReviewController {
           .status(400)
           .json({ error: "Shade, name and rating are required" });
       }
+      const r = Number(rating);
+      if (isNaN(r) || r < 1 || r > 5) {
+        return res.status(400).json({ error: "Rating must be 1-5" });
+      }
+      if (String(customerName).length > 60 || String(text || "").length > 1000) {
+        return res.status(400).json({ error: "Review is too long" });
+      }
       const shadeDoc = await Shade.findById(shade, "product");
       if (!shadeDoc) return res.status(404).json({ error: "Shade not found" });
       await Review.create({

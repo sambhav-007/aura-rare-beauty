@@ -71,6 +71,9 @@ async function run() {
     ["Rafael", "Nail Lacquer", true, "numbered", 60, 59, 65],
     ["England", "Nail Paint", false, "numbered", 60, 49, 59],
     ["Aura Swift Erase", "NPR Tissue", false, "numbered", 6, 99, 129],
+    ["Aura Bare Bear Wipes", "NPR Tissue", false, "numbered", 6, 99, 129],
+    ["Potlis", "Combo Packs", true, "numbered", 4, 499, 699],
+    ["Box", "Combo Packs", false, "numbered", 3, 799, 999],
   ];
 
   const lipstickShades = [

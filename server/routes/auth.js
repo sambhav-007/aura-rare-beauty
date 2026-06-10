@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("../controller/auth");
-const { loginCheck, isAuth, isAdmin } = require("../middleware/auth");
 
-router.post("/isadmin", authController.isAdmin);
-router.post("/signup", authController.postSignup);
+/*
+ * Public signup is disabled: the old route minted admin accounts (userRole: 1)
+ * for anyone. Aura Rare is single-admin — create the account with
+ * `node scripts/createAdmin.js` instead.
+ */
 router.post("/signin", authController.postSignin);
-router.post("/user", loginCheck, isAuth, isAdmin, authController.allUser);
 
 module.exports = router;

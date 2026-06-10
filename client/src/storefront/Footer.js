@@ -38,7 +38,10 @@ const Footer = () => {
               </a>
             )}
           </div>
-          <Link to="/cart" className="nav-link block mt-4">Cart</Link>
+          <div className="flex flex-col space-y-2 mt-4">
+            <Link to="/about" className="nav-link">About</Link>
+            <Link to="/contact" className="nav-link">Contact</Link>
+          </div>
         </div>
       </div>
       <div className="hairline-t">

@@ -119,7 +119,8 @@ class Auth {
         if (login) {
           const token = jwt.sign(
             { _id: data._id, role: data.userRole },
-            JWT_SECRET
+            JWT_SECRET,
+            { expiresIn: "7d" }
           );
           const encode = jwt.verify(token, JWT_SECRET);
           return res.json({

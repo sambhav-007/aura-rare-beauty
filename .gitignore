@@ -3,3 +3,13 @@ uploads
 images
 package-lock.json
 img
+# environment secrets
+.env
+server/.env
+client/.env
+
+# local tooling
+.claude/
+
+# builds
+client/build
