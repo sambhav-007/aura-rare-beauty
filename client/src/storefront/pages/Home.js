@@ -40,12 +40,12 @@ const Home = () => {
     <Layout bare>
       {/* ---------- HERO ---------- */}
       <section
-        className="relative flex items-center"
+        className={`relative flex items-center ${heroImg ? "" : "hero-fallback"}`}
         style={{
           minHeight: "100vh",
           background: heroImg
             ? `linear-gradient(90deg, rgba(31,31,31,.45) 0%, rgba(31,31,31,.15) 55%, rgba(31,31,31,0) 100%), url(${heroImg}) center/cover no-repeat`
-            : "linear-gradient(120deg, var(--sand) 0%, var(--cream) 100%)",
+            : undefined,
         }}
       >
         <div className="aura-container w-full">

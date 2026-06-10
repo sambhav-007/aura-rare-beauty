@@ -5,14 +5,25 @@ import ProductCard from "../ProductCard";
 import Reveal from "../Reveal";
 import { getCategory } from "../../api/shop";
 
+const SORTS = {
+  newest: { label: "Newest", fn: () => 0 },
+  priceAsc: { label: "Price: Low to High", fn: (a, b) => (a.minPrice || 0) - (b.minPrice || 0) },
+  priceDesc: { label: "Price: High to Low", fn: (a, b) => (b.minPrice || 0) - (a.minPrice || 0) },
+};
+
 const Category = () => {
   const { slug } = useParams();
   const [data, setData] = useState(null);
+  const [sort, setSort] = useState("newest");
 
   useEffect(() => {
     setData(null);
+    setSort("newest");
     getCategory(slug).then((r) => setData(r));
   }, [slug]);
+
+  const sorted =
+    data && data.products ? [...data.products].sort(SORTS[sort].fn) : [];
 
   return (
     <Layout>
@@ -33,11 +44,26 @@ const Category = () => {
             {data.products.length === 0 ? (
               <p className="text-center text-muted py-16">No products yet.</p>
             ) : (
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 md:gap-12">
-                {data.products.map((p, i) => (
-                  <ProductCard key={p._id} product={p} index={i} />
-                ))}
-              </div>
+              <>
+                <div className="flex justify-end mb-8">
+                  <select
+                    value={sort}
+                    onChange={(e) => setSort(e.target.value)}
+                    className="lux-input"
+                    style={{ width: "auto", padding: "0.5rem 1rem" }}
+                    aria-label="Sort products"
+                  >
+                    {Object.entries(SORTS).map(([k, v]) => (
+                      <option key={k} value={k}>{v.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 md:gap-12">
+                  {sorted.map((p, i) => (
+                    <ProductCard key={p._id} product={p} index={i} />
+                  ))}
+                </div>
+              </>
             )}
           </>
         )}

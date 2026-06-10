@@ -2,7 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import useInView from "./useInView";
-import { money } from "./format";
+import { money, cld } from "./format";
+
+const Stars = ({ rating }) =>
+  rating && rating.count > 0 ? (
+    <div className="text-xs mt-1" style={{ color: "var(--accent)" }}>
+      ★ {rating.avg} <span className="text-muted">({rating.count})</span>
+    </div>
+  ) : null;
 
 const ProductCard = ({ product, index = 0 }) => {
   const img = product.coverImage && product.coverImage.url;
@@ -16,10 +23,16 @@ const ProductCard = ({ product, index = 0 }) => {
     >
       <Link to={`/product/${product.slug}`} className="block group">
         <div className="img-zoom bg-sand" style={{ aspectRatio: "3 / 4" }}>
-          <div
-            className="img-zoom-inner"
-            style={{ background: img ? `url(${img}) center/cover no-repeat` : undefined }}
-          />
+          {img ? (
+            <img
+              src={cld(img, 600)}
+              alt={product.name}
+              loading="lazy"
+              className="img-zoom-inner w-full h-full object-cover"
+            />
+          ) : (
+            <div className="img-zoom-inner" />
+          )}
         </div>
         <div className="pt-5 text-center">
           <div className="eyebrow mb-1">{product.shadeCount || 0} Shades</div>
@@ -29,6 +42,7 @@ const ProductCard = ({ product, index = 0 }) => {
           {product.minPrice != null && (
             <div className="text-sm text-muted mt-1">From {money(product.minPrice)}</div>
           )}
+          <Stars rating={product.rating} />
         </div>
       </Link>
     </motion.div>

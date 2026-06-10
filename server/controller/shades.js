@@ -4,6 +4,10 @@ const { toImages } = require("../config/uploadCloud");
 const { destroyAssets } = require("../config/cloudinary");
 const { deleteShadeById } = require("../config/cascade");
 
+// Price fields must be non-negative numbers (or absent).
+const badPrice = (v) =>
+  v !== undefined && v !== null && v !== "" && (isNaN(Number(v)) || Number(v) < 0);
+
 class ShadeController {
   // GET /api/shades/by-product/:productId
   async getByProduct(req, res) {
@@ -27,6 +31,10 @@ class ShadeController {
         return res
           .status(400)
           .json({ error: "Product, name and price are required" });
+      }
+      if (badPrice(price) || badPrice(mrp)) {
+        await destroyAssets(images.map((i) => i.publicId));
+        return res.status(400).json({ error: "Price/MRP must be a non-negative number" });
       }
       const slug = await uniqueSlug(Shade, name);
       const shade = await Shade.create({
@@ -55,6 +63,9 @@ class ShadeController {
         return res
           .status(400)
           .json({ error: "Product and a non-empty shades list are required" });
+      }
+      if (badPrice(price) || badPrice(mrp) || shades.some((s) => s && (badPrice(s.price) || badPrice(s.mrp)))) {
+        return res.status(400).json({ error: "Price/MRP must be a non-negative number" });
       }
       const seen = new Set();
       const docs = [];
@@ -106,6 +117,10 @@ class ShadeController {
   async update(req, res) {
     try {
       const { name, price, mrp, description, status } = req.body;
+      if (badPrice(price) || badPrice(mrp)) {
+        if (req.files) await destroyAssets(req.files.map((f) => f.filename));
+        return res.status(400).json({ error: "Price/MRP must be a non-negative number" });
+      }
       const shade = await Shade.findById(req.params.id);
       if (!shade) {
         if (req.files) await destroyAssets(req.files.map((f) => f.filename));

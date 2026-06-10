@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import AdminLayout from "../layout";
 import {
-  getProducts,
+  getProductById,
   getShadesByProduct,
   bulkCreateShades,
   bulkUpdateShades,
@@ -37,9 +37,7 @@ const ShadeManager = () => {
     getShadesByProduct(id).then((res) => setRows(res.shades || []));
   useEffect(() => {
     load();
-    getProducts().then((res) =>
-      setProduct((res.products || []).find((p) => p._id === id) || {})
-    );
+    getProductById(id).then((res) => setProduct(res.product || {}));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 

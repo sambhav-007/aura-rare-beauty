@@ -39,7 +39,7 @@ const Checkout = () => {
     const url = `https://wa.me/${number}?text=${encodeURIComponent(buildMessage())}`;
     window.open(url, "_blank");
     clear();
-    history.push("/");
+    history.push("/thank-you");
   };
 
   if (items.length === 0)

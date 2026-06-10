@@ -50,6 +50,7 @@ export const deleteCategory = (id) => del(`/categories/${id}`, auth());
 /* ---- Products ---- */
 export const getProducts = (q = "") => get(`/products${q}`);
 export const getProduct = (slug) => get(`/products/${slug}`);
+export const getProductById = (id) => get(`/products/by-id/${id}`);
 export const createProduct = (obj) => post("/products", form(obj), authForm());
 export const updateProduct = (id, obj) =>
   put(`/products/${id}`, form(obj), authForm());

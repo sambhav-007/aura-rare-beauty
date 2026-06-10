@@ -11,6 +11,9 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const helmet = require("helmet");
+const compression = require("compression");
+const rateLimit = require("express-rate-limit");
 
 // Active routers (Aura Rare architecture)
 const authRouter = require("./routes/auth"); // admin login
@@ -40,11 +43,26 @@ mongoose
   .catch((err) => console.log("Database Not Connected !!!", err.message));
 
 // Middleware
-app.use(morgan("dev"));
+app.use(helmet());
+app.use(compression());
+if (process.env.NODE_ENV !== "production") app.use(morgan("dev"));
 app.use(cookieParser());
-app.use(cors());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+// CORS: comma-separated allowlist in CORS_ORIGINS, or open in dev.
+const origins = (process.env.CORS_ORIGINS || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+app.use(cors(origins.length ? { origin: origins } : {}));
+app.use(express.urlencoded({ extended: false, limit: "1mb" }));
+app.use(express.json({ limit: "1mb" }));
+
+// Rate limits: brute-force guard on login, spam guard on guest reviews.
+const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 20 });
+const reviewLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 10 });
+app.use("/api/signin", authLimiter);
+app.use("/api/reviews", (req, res, next) =>
+  req.method === "POST" ? reviewLimiter(req, res, next) : next()
+);
 
 // Routes
 app.use("/api", authRouter);

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useSettings } from "../context/SettingsContext";
-import { getCategories } from "../api/shop";
+import { getCategories, search as searchApi } from "../api/shop";
 import Logo from "./Logo";
+import { cld } from "./format";
 
 const Navbar = () => {
   const history = useHistory();
@@ -14,6 +15,25 @@ const Navbar = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [menu, setMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [sugg, setSugg] = useState(null);
+
+  // Debounced live suggestions while typing in the expanded search.
+  useEffect(() => {
+    if (!showSearch || q.trim().length < 2) {
+      setSugg(null);
+      return;
+    }
+    const t = setTimeout(() => {
+      searchApi(q.trim()).then((r) => {
+        if (r && !r.error) {
+          const shades = (r.shades || []).slice(0, 4);
+          const products = (r.products || []).slice(0, 3);
+          setSugg(shades.length || products.length ? { shades, products } : null);
+        }
+      });
+    }, 250);
+    return () => clearTimeout(t);
+  }, [q, showSearch]);
 
   useEffect(() => {
     getCategories().then((res) =>
@@ -101,7 +121,7 @@ const Navbar = () => {
       </div>
 
       {showSearch && (
-        <div className="aura-container pb-5">
+        <div className="aura-container pb-5 relative">
           <form onSubmit={go} className="hairline-b flex">
             <input
               autoFocus
@@ -111,6 +131,55 @@ const Navbar = () => {
               className="w-full bg-transparent py-3 outline-none text-ink placeholder-gray-400 font-display text-xl"
             />
           </form>
+          {sugg && (
+            <div className="absolute left-0 right-0 z-40 px-6">
+              <div className="bg-card rounded shadow-xl border border-hairline overflow-hidden mx-auto" style={{ maxWidth: 640 }}>
+                {sugg.shades.map((s) => (
+                  <button
+                    key={s._id}
+                    className="flex items-center gap-3 w-full text-left px-4 py-3 hover:bg-sand transition-colors"
+                    onClick={() => {
+                      if (s.product) history.push(`/product/${s.product.slug}`);
+                      setShowSearch(false);
+                      setQ("");
+                    }}
+                  >
+                    <div
+                      className="w-9 h-9 rounded bg-sand flex-shrink-0"
+                      style={
+                        s.images && s.images[0]
+                          ? { background: `url(${cld(s.images[0].url, 80)}) center/cover` }
+                          : undefined
+                      }
+                    />
+                    <span className="text-sm">
+                      {s.name}
+                      <span className="text-muted"> — {s.product ? s.product.name : ""}</span>
+                    </span>
+                  </button>
+                ))}
+                {sugg.products.map((p) => (
+                  <button
+                    key={p._id}
+                    className="block w-full text-left px-4 py-3 hover:bg-sand transition-colors text-sm font-medium"
+                    onClick={() => {
+                      history.push(`/product/${p.slug}`);
+                      setShowSearch(false);
+                      setQ("");
+                    }}
+                  >
+                    {p.name}
+                  </button>
+                ))}
+                <button
+                  className="block w-full text-left px-4 py-3 text-sm text-accent hover:bg-sand"
+                  onClick={go}
+                >
+                  See all results →
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

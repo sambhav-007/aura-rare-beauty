@@ -13,27 +13,45 @@ class ProductController {
       const filter = {};
       if (req.query.category) filter.category = req.query.category;
       if (req.query.featured === "true") filter.isFeatured = true;
-      const products = await Product.find(filter)
+      // Optional pagination: ?limit=24&page=1 (defaults to everything).
+      const limit = Math.min(parseInt(req.query.limit, 10) || 0, 100);
+      const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+      let query = Product.find(filter)
         .populate("category", "name slug")
         .sort({ _id: -1 })
         .lean();
-      await attachShadeStats(products); // adds shadeCount + minPrice
+      if (limit) query = query.skip((page - 1) * limit).limit(limit);
+      const products = await query;
+      await attachShadeStats(products); // adds shadeCount + minPrice + rating
       return res.json({ products });
     } catch (err) {
       return res.status(500).json({ error: "Failed to load products" });
     }
   }
 
-  // GET /api/products/:slug -> product + its shades
+  // GET /api/products/:slug -> product + its shades (+ rating aggregate)
   async getBySlug(req, res) {
     try {
-      const product = await Product.findOne({ slug: req.params.slug }).populate(
-        "category",
-        "name slug"
-      );
+      const product = await Product.findOne({ slug: req.params.slug })
+        .populate("category", "name slug")
+        .lean();
       if (!product) return res.status(404).json({ error: "Product not found" });
       const shades = await Shade.find({ product: product._id }).sort({ _id: 1 });
+      await attachShadeStats([product]);
       return res.json({ product, shades });
+    } catch (err) {
+      return res.status(500).json({ error: "Failed to load product" });
+    }
+  }
+
+  // GET /api/products/by-id/:id -> single product (admin Shade Manager header)
+  async getById(req, res) {
+    try {
+      const product = await Product.findById(req.params.id)
+        .populate("category", "name slug")
+        .lean();
+      if (!product) return res.status(404).json({ error: "Product not found" });
+      return res.json({ product });
     } catch (err) {
       return res.status(500).json({ error: "Failed to load product" });
     }

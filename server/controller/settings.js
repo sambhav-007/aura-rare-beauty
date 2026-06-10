@@ -30,6 +30,15 @@ class SettingsController {
   // PUT /api/settings (admin, optional heroImage)
   async update(req, res) {
     try {
+      if (
+        req.body.whatsappNumber !== undefined &&
+        req.body.whatsappNumber !== "" &&
+        !/^\d{10,15}$/.test(String(req.body.whatsappNumber).replace(/\D/g, ""))
+      ) {
+        return res
+          .status(400)
+          .json({ error: "WhatsApp number must be 10-15 digits incl. country code" });
+      }
       let settings = await StoreSettings.findOne({});
       if (!settings) settings = await StoreSettings.create({});
       EDITABLE.forEach((key) => {
