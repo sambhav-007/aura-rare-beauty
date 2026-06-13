@@ -45,8 +45,14 @@ class SettingsController {
         if (req.body[key] !== undefined) settings[key] = req.body[key];
       });
       if (req.file) {
+        // Replace hero image (delete the old asset).
         const oldId = settings.heroImage && settings.heroImage.publicId;
         settings.heroImage = toImage(req.file);
+        if (oldId) await destroyAssets(oldId);
+      } else if (req.body.removeHeroImage === "true") {
+        // Clear hero image entirely.
+        const oldId = settings.heroImage && settings.heroImage.publicId;
+        settings.heroImage = null;
         if (oldId) await destroyAssets(oldId);
       }
       await settings.save();

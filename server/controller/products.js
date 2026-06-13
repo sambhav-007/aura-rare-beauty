@@ -104,6 +104,10 @@ class ProductController {
         const oldId = product.coverImage && product.coverImage.publicId;
         product.coverImage = toImage(req.file);
         if (oldId) await destroyAssets(oldId);
+      } else if (req.body.removeImage === "true") {
+        const oldId = product.coverImage && product.coverImage.publicId;
+        product.coverImage = null;
+        if (oldId) await destroyAssets(oldId);
       }
       await product.save();
       return res.json({ success: "Product updated", product });

@@ -58,6 +58,15 @@ const Settings = () => {
     toast(res.success);
   };
 
+  const removeHero = async () => {
+    if (!window.confirm("Remove the hero image? The homepage will use its fallback.")) return;
+    const res = await updateSettings({ removeHeroImage: "true" });
+    if (res.error) return toast(res.error, "error");
+    setS(res.settings);
+    setFile(null);
+    toast("Hero image removed");
+  };
+
   if (!s) return <AdminLayout><Spinner /></AdminLayout>;
 
   return (
@@ -83,12 +92,23 @@ const Settings = () => {
             />
           </Field>
           <Field label="Hero Image">
-            {imgUrl(s.heroImage) && (
-              <img
-                src={s.heroImage.url}
-                alt="hero"
-                className="w-full h-40 object-cover rounded mb-2"
-              />
+            {imgUrl(s.heroImage) ? (
+              <div className="mb-2">
+                <img
+                  src={s.heroImage.url}
+                  alt="hero"
+                  className="w-full h-40 object-cover rounded"
+                />
+                <div className="mt-2">
+                  <Btn type="button" variant="danger" onClick={removeHero}>
+                    Remove Hero Image
+                  </Btn>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-gray-400 mb-2">
+                No hero image set — the homepage uses its styled fallback.
+              </p>
             )}
             <Input
               type="file"

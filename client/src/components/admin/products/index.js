@@ -81,6 +81,16 @@ const Products = () => {
     load();
   };
 
+  const removeImage = async () => {
+    if (!editing || !window.confirm("Remove this product's cover image?")) return;
+    const res = await updateProduct(editing._id, { removeImage: "true" });
+    if (res.error) return toast(res.error, "error");
+    setEditing(res.product);
+    setFile(null);
+    toast("Cover image removed");
+    load();
+  };
+
   const remove = async (p) => {
     if (!window.confirm(`Delete "${p.name}" and all its shades?`)) return;
     const res = await deleteProduct(p._id);
@@ -250,6 +260,18 @@ const Products = () => {
             </label>
           </div>
           <Field label={`Cover image ${editing ? "(leave blank to keep)" : ""}`}>
+            {editing && imgUrl(editing.coverImage) && (
+              <div className="mb-2">
+                <img
+                  src={editing.coverImage.url}
+                  alt={editing.name}
+                  className="w-24 h-24 object-cover rounded mb-2"
+                />
+                <Btn type="button" variant="danger" onClick={removeImage}>
+                  Remove Image
+                </Btn>
+              </div>
+            )}
             <Input
               type="file"
               accept="image/*"

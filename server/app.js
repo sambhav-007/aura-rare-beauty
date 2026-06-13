@@ -14,6 +14,25 @@ const cors = require("cors");
 const helmet = require("helmet");
 const compression = require("compression");
 const rateLimit = require("express-rate-limit");
+const dns = require("dns");
+
+/*
+ * mongodb+srv:// needs a DNS SRV lookup. Node's c-ares resolver fails with
+ * `querySrv ECONNREFUSED` when the OS DNS server is an IPv6 link-local
+ * address (common on Windows). Point the resolver at a reliable DNS server.
+ * Override with DNS_SERVERS="1.1.1.1,8.8.8.8", or DNS_SERVERS="off" to skip.
+ */
+if (process.env.DNS_SERVERS !== "off") {
+  const servers = (process.env.DNS_SERVERS || "8.8.8.8,1.1.1.1")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  try {
+    dns.setServers(servers);
+  } catch (e) {
+    console.log("Could not set DNS servers:", e.message);
+  }
+}
 
 // Active routers (Aura Rare architecture)
 const authRouter = require("./routes/auth"); // admin login
@@ -43,7 +62,9 @@ mongoose
   .catch((err) => console.log("Database Not Connected !!!", err.message));
 
 // Middleware
-app.use(helmet());
+// CSP is a browser-HTML protection; this server returns only JSON, so we
+// disable it (it otherwise just blocks Chrome's devtools probe and adds noise).
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(compression());
 if (process.env.NODE_ENV !== "production") app.use(morgan("dev"));
 app.use(cookieParser());
@@ -76,6 +97,15 @@ app.use("/api/search", searchRouter);
 app.use("/api/stats", statsRouter);
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
+
+// Friendly root so hitting the API host directly doesn't look broken.
+app.get("/", (req, res) =>
+  res.json({
+    name: "Aura Rare API",
+    status: "running",
+    docs: "All endpoints live under /api (e.g. /api/health, /api/products).",
+  })
+);
 
 // Run Server
 const PORT = process.env.PORT || 8000;

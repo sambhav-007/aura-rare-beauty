@@ -191,6 +191,54 @@ textarea:focus-visible,
   border-radius: 4px;
 }
 
+/* ---------- Mega footer ---------- */
+.footer-mega {
+  background: var(--ink);
+  color: var(--cream);
+  overflow: hidden;
+}
+.footer-eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+}
+.footer-link {
+  color: rgba(250, 247, 242, 0.85);
+  font-size: 0.92rem;
+  transition: color 0.25s ease, transform 0.25s ease;
+  width: fit-content;
+}
+.footer-link:hover {
+  color: var(--accent);
+  transform: translateX(3px);
+}
+.footer-muted { color: rgba(250, 247, 242, 0.55); }
+.footer-hairline { border-top: 1px solid rgba(250, 247, 242, 0.12); }
+
+/* Giant wordmark: spans the width, gently clipped at the bottom edge */
+.footer-giant-wrap {
+  overflow: hidden;
+  line-height: 0;
+  padding-top: 1.5rem;
+}
+.footer-giant {
+  font-size: clamp(3.5rem, 14.5vw, 13rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 0.96;
+  text-align: center;
+  white-space: nowrap;
+  margin-bottom: -0.16em; /* clip the descender edge for the trendy cut-off look */
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(250, 247, 242, 0.35);
+  background: linear-gradient(180deg, rgba(250, 247, 242, 0.95) 0%, rgba(184, 138, 90, 0.55) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  user-select: none;
+}
+
 /* ---------- Hero fallback texture (until photography arrives) ---------- */
 .hero-fallback {
   background:

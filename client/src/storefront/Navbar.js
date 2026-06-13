@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
 import { Link, useHistory } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useSettings } from "../context/SettingsContext";
@@ -183,23 +184,30 @@ const Navbar = () => {
         </div>
       )}
 
-      {/* Mobile drawer */}
-      {menu && (
-        <div
-          className="fixed inset-0 z-40 md:hidden"
-          onClick={() => setMenu(false)}
-          style={{
-            background: "rgba(250, 247, 242, 0.3)",
-            backdropFilter: "blur(8px)",
-            WebkitBackdropFilter: "blur(8px)",
-          }}
-        />
-      )}
-      <aside
-        className={`fixed top-0 left-0 h-full w-4/5 max-w-xs bg-cream z-50 shadow-2xl transform transition-transform duration-300 md:hidden flex flex-col ${
-          menu ? "translate-x-0" : "-translate-x-full"
-        }`}
-        style={!menu ? { transform: "translateX(-100%)" } : undefined}
+      {/* Mobile drawer — rendered via portal: the header's backdrop-filter
+          would otherwise trap position:fixed children inside it. */}
+      {ReactDOM.createPortal(
+        <>
+          {menu && (
+            <div
+              className="fixed inset-0 z-40 md:hidden"
+              onClick={() => setMenu(false)}
+              style={{
+                background: "rgba(250, 247, 242, 0.3)",
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)",
+              }}
+            />
+          )}
+          <aside
+        className="fixed top-0 left-0 h-full z-50 shadow-2xl md:hidden flex flex-col"
+        style={{
+          width: "80%",
+          maxWidth: 320,
+          background: "var(--cream)",
+          transform: menu ? "translateX(0)" : "translateX(-105%)",
+          transition: "transform 0.3s cubic-bezier(0.22, 1, 0.36, 1)",
+        }}
       >
         <div className="flex items-center justify-between px-6 h-20 hairline-b">
           <Logo height={44} fallbackName={settings.storeName || "Aura Rare"} />
@@ -239,7 +247,10 @@ const Navbar = () => {
         <div className="mt-auto px-6 py-6 hairline-t text-xs text-muted tracking-luxe uppercase">
           Order via WhatsApp
         </div>
-      </aside>
+          </aside>
+        </>,
+        document.body
+      )}
     </header>
   );
 };

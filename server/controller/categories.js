@@ -80,6 +80,10 @@ class CategoryController {
         const oldId = category.image && category.image.publicId;
         category.image = toImage(req.file);
         if (oldId) await destroyAssets(oldId);
+      } else if (req.body.removeImage === "true") {
+        const oldId = category.image && category.image.publicId;
+        category.image = null;
+        if (oldId) await destroyAssets(oldId);
       }
       await category.save();
       return res.json({ success: "Category updated", category });

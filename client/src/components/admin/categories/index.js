@@ -69,6 +69,16 @@ const Categories = () => {
     load();
   };
 
+  const removeImage = async () => {
+    if (!editing || !window.confirm("Remove this category's image?")) return;
+    const res = await updateCategory(editing._id, { removeImage: "true" });
+    if (res.error) return toast(res.error, "error");
+    setEditing(res.category);
+    setFile(null);
+    toast("Image removed");
+    load();
+  };
+
   const remove = async (c) => {
     if (!window.confirm(`Delete "${c.name}" and ALL its products/shades?`)) return;
     const res = await deleteCategory(c._id);
@@ -193,6 +203,18 @@ const Categories = () => {
             </Field>
           </div>
           <Field label={`Image ${editing ? "(leave blank to keep)" : ""}`}>
+            {editing && imgUrl(editing.image) && (
+              <div className="mb-2">
+                <img
+                  src={editing.image.url}
+                  alt={editing.name}
+                  className="w-24 h-24 object-cover rounded mb-2"
+                />
+                <Btn type="button" variant="danger" onClick={removeImage}>
+                  Remove Image
+                </Btn>
+              </div>
+            )}
             <Input
               type="file"
               accept="image/*"

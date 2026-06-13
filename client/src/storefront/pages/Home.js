@@ -13,6 +13,7 @@ const Home = () => {
   const [cats, setCats] = useState([]);
   const [products, setProducts] = useState([]);
   const [banner, setBanner] = useState(null);
+  const [heroRatio, setHeroRatio] = useState(null);
 
   useEffect(() => {
     getCategories().then((r) =>
@@ -36,15 +37,34 @@ const Home = () => {
   const heroHeading = s.heroHeading || "Beauty That Speaks For Itself";
   const heroSub = s.heroSubheading || "Discover shades crafted for every mood.";
 
+  // Read the hero image's natural aspect ratio so the section height adapts
+  // to it (box matches the image → full image shown, no crop, no letterbox).
+  useEffect(() => {
+    if (!heroImg) {
+      setHeroRatio(null);
+      return;
+    }
+    const im = new Image();
+    im.onload = () =>
+      setHeroRatio(im.naturalHeight ? im.naturalWidth / im.naturalHeight : null);
+    im.src = heroImg;
+  }, [heroImg]);
+
   return (
     <Layout bare>
       {/* ---------- HERO ---------- */}
       <section
         className={`relative flex items-center ${heroImg ? "" : "hero-fallback"}`}
         style={{
-          minHeight: "100vh",
+          // No image: full-viewport fallback. With image: box matches the
+          // image's aspect ratio (clamped) so the whole image shows, cover-filled.
+          minHeight: heroImg ? "55vh" : "100vh",
+          maxHeight: heroImg ? "100vh" : undefined,
+          aspectRatio: heroImg && heroRatio ? String(heroRatio) : undefined,
+          width: "100%",
+          backgroundColor: heroImg ? "var(--ink)" : undefined,
           background: heroImg
-            ? `linear-gradient(90deg, rgba(31,31,31,.45) 0%, rgba(31,31,31,.15) 55%, rgba(31,31,31,0) 100%), url(${heroImg}) center/cover no-repeat`
+            ? `linear-gradient(90deg, rgba(31,31,31,.45) 0%, rgba(31,31,31,.15) 55%, rgba(31,31,31,0) 100%), url(${heroImg}) center/cover no-repeat var(--ink)`
             : undefined,
         }}
       >
