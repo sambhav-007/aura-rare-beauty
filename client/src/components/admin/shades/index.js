@@ -147,7 +147,7 @@ const ShadeManager = () => {
           <Spinner />
         ) : (
           <div className="bg-white rounded-lg shadow overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="admin-table w-full text-sm">
               <thead className="bg-gray-50 text-gray-600 text-left">
                 <tr>
                   <th className="p-2">
@@ -176,7 +176,7 @@ const ShadeManager = () => {
                 )}
                 {rows.map((r, i) => (
                   <tr key={r._id} className="border-t align-top">
-                    <td className="p-2">
+                    <td className="p-2" data-label="Select">
                       <input
                         type="checkbox"
                         checked={!!selected[r._id]}
@@ -185,8 +185,10 @@ const ShadeManager = () => {
                         }
                       />
                     </td>
-                    <td className="p-2 text-gray-400">{i + 1}</td>
-                    <td className="p-2">
+                    <td className="p-2 text-gray-400 admin-hide-sm" data-label="#">
+                      {i + 1}
+                    </td>
+                    <td className="p-2" data-label="Images">
                       <div className="flex items-center gap-1 flex-wrap max-w-xs">
                         {(r.images || []).map((img) => (
                           <div key={img.publicId} className="relative">
@@ -216,13 +218,13 @@ const ShadeManager = () => {
                         </label>
                       </div>
                     </td>
-                    <td className="p-2">
+                    <td className="p-2" data-label="Name">
                       <Input
                         value={r.name}
                         onChange={(e) => setRow(r._id, { name: e.target.value })}
                       />
                     </td>
-                    <td className="p-2 w-24">
+                    <td className="p-2 w-24" data-label="Price">
                       <Input
                         type="number"
                         value={r.price}
@@ -231,14 +233,14 @@ const ShadeManager = () => {
                         }
                       />
                     </td>
-                    <td className="p-2 w-24">
+                    <td className="p-2 w-24" data-label="MRP">
                       <Input
                         type="number"
                         value={r.mrp == null ? "" : r.mrp}
                         onChange={(e) => setRow(r._id, { mrp: e.target.value })}
                       />
                     </td>
-                    <td className="p-2 w-28">
+                    <td className="p-2 w-28" data-label="Status">
                       <Select
                         value={r.status}
                         onChange={(e) =>
@@ -249,16 +251,21 @@ const ShadeManager = () => {
                         <option>Disabled</option>
                       </Select>
                     </td>
-                    <td className="p-2 text-right space-x-1 whitespace-nowrap">
-                      <Btn
-                        variant={r._dirty ? "dark" : "light"}
-                        onClick={() => saveRow(r)}
-                      >
-                        Save
-                      </Btn>
-                      <Btn variant="danger" onClick={() => removeRow(r)}>
-                        Del
-                      </Btn>
+                    <td
+                      className="p-2 text-right whitespace-nowrap admin-actions"
+                      data-label="Actions"
+                    >
+                      <div className="admin-actions-wrap">
+                        <Btn
+                          variant={r._dirty ? "dark" : "light"}
+                          onClick={() => saveRow(r)}
+                        >
+                          Save
+                        </Btn>
+                        <Btn variant="danger" onClick={() => removeRow(r)}>
+                          Del
+                        </Btn>
+                      </div>
                     </td>
                   </tr>
                 ))}
