@@ -4,6 +4,7 @@ import Layout from "../Layout";
 import { useCart } from "../../context/CartContext";
 import { useSettings } from "../../context/SettingsContext";
 import { money } from "../format";
+import { createOrder } from "../../api/shop";
 
 const Checkout = () => {
   const { items, total, clear } = useCart();
@@ -30,12 +31,30 @@ const Checkout = () => {
     return m;
   };
 
-  const placeOrder = (e) => {
+  const placeOrder = async (e) => {
     e.preventDefault();
     if (!f.name.trim() || !f.phone.trim() || !f.address.trim())
       return setErr("Please fill in all fields.");
     const number = (settings.whatsappNumber || "").replace(/\D/g, "");
     if (!number) return setErr("Store WhatsApp number is not configured.");
+    // Record the order for admin tracking (best-effort; never blocks checkout).
+    try {
+      await createOrder({
+        items: items.map((it) => ({
+          variantId: it.shadeId,
+          variantName: it.shadeName,
+          productName: it.productName,
+          productSlug: it.productSlug,
+          price: it.price,
+          qty: it.qty,
+        })),
+        customer: f,
+        total,
+        paymentMethod: "whatsapp",
+      });
+    } catch (err) {
+      /* order recording is best-effort — proceed to WhatsApp regardless */
+    }
     const url = `https://wa.me/${number}?text=${encodeURIComponent(buildMessage())}`;
     window.open(url, "_blank");
     clear();

@@ -84,6 +84,17 @@ export const getAllReviews = () => get("/reviews", auth());
 export const approveReview = (id) => put(`/reviews/${id}/approve`, {}, auth());
 export const deleteReview = (id) => del(`/reviews/${id}`, auth());
 
+/* ---- Orders ---- */
+export const getOrders = (query = "") => get(`/orders${query}`, auth());
+export const getOrder = (id) => get(`/orders/${id}`, auth());
+export const updateOrderStatus = (id, status) =>
+  patch(`/orders/${id}/status`, { status }, auth());
+
+/* ---- Product CSV import ---- */
+export const previewProductImport = (csv) =>
+  post("/products/import/preview", { csv }, auth());
+export const runProductImport = (csv) => post("/products/import", { csv }, auth());
+
 /* ---- Settings ---- */
 export const getSettings = () => get("/settings");
 export const updateSettings = (obj) => put("/settings", form(obj), authForm());

@@ -28,6 +28,7 @@ const Products = lazy(() => import("./components/admin/products"));
 const ShadeManager = lazy(() => import("./components/admin/shades"));
 const Banners = lazy(() => import("./components/admin/banners"));
 const Reviews = lazy(() => import("./components/admin/reviews"));
+const Orders = lazy(() => import("./components/admin/orders"));
 const Settings = lazy(() => import("./components/admin/settings"));
 
 const AdminFallback = (
@@ -71,6 +72,7 @@ function App() {
               />
               <AdminProtectedRoute exact path="/admin/dashboard/banners" component={Banners} />
               <AdminProtectedRoute exact path="/admin/dashboard/reviews" component={Reviews} />
+              <AdminProtectedRoute exact path="/admin/dashboard/orders" component={Orders} />
               <AdminProtectedRoute exact path="/admin/dashboard/settings" component={Settings} />
 
               <Route component={NotFound} />
