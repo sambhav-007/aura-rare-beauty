@@ -1,12 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Layout from "../Layout";
+import Seo from "../Seo";
 import { useSettings } from "../../context/SettingsContext";
 
 const About = () => {
   const s = useSettings();
   return (
     <Layout>
+      <Seo
+        title="About"
+        description={
+          s.aboutUs ||
+          `About ${s.storeName || "Aura Rare"} — a premium cosmetics house crafting considered, wearable shades.`
+        }
+        path="/about"
+      />
       <div className="aura-container py-24 max-w-2xl text-center">
         <div className="eyebrow mb-4">Our Story</div>
         <h1 className="display-hero mb-10">Rare by Nature</h1>

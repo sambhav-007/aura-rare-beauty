@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useHistory } from "react-router-dom";
 import Layout from "../Layout";
 import { useCart } from "../../context/CartContext";
+import Seo from "../Seo";
 import { money } from "../format";
 
 const Cart = () => {
@@ -10,6 +11,7 @@ const Cart = () => {
 
   return (
     <Layout>
+      <Seo title="Your Cart" path="/cart" noindex />
       <div className="aura-container py-16 md:py-24">
         <div className="text-center mb-14">
           <div className="eyebrow mb-3">Bag</div>

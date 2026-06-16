@@ -1,0 +1,10 @@
+# Aura Rare — robots
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /checkout
+Disallow: /thank-you
+Disallow: /cart
+
+# Update the host below to your production domain at deploy time.
+Sitemap: https://aurarare.in/sitemap.xml

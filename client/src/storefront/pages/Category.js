@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import Layout from "../Layout";
 import ProductCard from "../ProductCard";
 import Reveal from "../Reveal";
+import Seo from "../Seo";
 import { getCategory } from "../../api/shop";
 
 const SORTS = {
@@ -25,8 +26,21 @@ const Category = () => {
   const sorted =
     data && data.products ? [...data.products].sort(SORTS[sort].fn) : [];
 
+  const cat = data && !data.error ? data.category : null;
+
   return (
     <Layout>
+      {cat && (
+        <Seo
+          title={cat.name}
+          description={
+            cat.description ||
+            `Shop the ${cat.name} collection — premium shades and beauty essentials, order easily over WhatsApp.`
+          }
+          image={cat.image && cat.image.url}
+          path={`/category/${cat.slug}`}
+        />
+      )}
       <div className="aura-container py-16 md:py-24">
         {!data ? (
           <p className="text-center text-muted py-24">Loading…</p>

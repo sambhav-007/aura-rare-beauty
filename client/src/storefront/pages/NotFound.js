@@ -1,9 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Layout from "../Layout";
+import Seo from "../Seo";
 
 const NotFound = () => (
   <Layout>
+    <Seo title="Page Not Found" noindex />
     <div className="aura-container py-32 text-center">
       <h1 className="font-display text-5xl mb-4">404</h1>
       <p className="text-muted mb-8">This page could not be found.</p>

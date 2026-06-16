@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import Seo from "../Seo";
 import { loginReq } from "../../components/shop/auth/fetchApi";
 
 const AdminLogin = () => {
@@ -22,6 +23,7 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-cream">
+      <Seo title="Admin Login" noindex />
       <form onSubmit={submit} className="bg-card p-8 rounded shadow w-full max-w-sm">
         <img
           src="/logo.png"

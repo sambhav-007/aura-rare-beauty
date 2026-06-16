@@ -5,6 +5,7 @@ import Layout from "../Layout";
 import ProductCard from "../ProductCard";
 import CategoryCard from "../CategoryCard";
 import Reveal from "../Reveal";
+import Seo from "../Seo";
 import { useSettings } from "../../context/SettingsContext";
 import { getCategories, getProducts, getBanners } from "../../api/shop";
 
@@ -50,8 +51,41 @@ const Home = () => {
     im.src = heroImg;
   }, [heroImg]);
 
+  const storeName = s.storeName || "Aura Rare";
+  const siteUrl =
+    (process.env.REACT_APP_SITE_URL || "").replace(/\/+$/, "") ||
+    (typeof window !== "undefined" ? window.location.origin : "");
+  const orgJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: storeName,
+    url: siteUrl || undefined,
+    logo: siteUrl ? `${siteUrl}/logo.png` : undefined,
+    sameAs: [s.instagramUrl, s.facebookUrl].filter(Boolean),
+  };
+  const siteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: storeName,
+    url: siteUrl || undefined,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${siteUrl}/search?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   return (
     <Layout bare>
+      <Seo
+        path="/"
+        description={
+          s.aboutUs ||
+          `${storeName} — premium cosmetics & curated shades. Explore the collection and order easily over WhatsApp.`
+        }
+        image={heroImg}
+        jsonLd={[orgJsonLd, siteJsonLd]}
+      />
       {/* ---------- HERO ---------- */}
       <section
         className={`relative flex items-center ${heroImg ? "" : "hero-fallback"}`}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import Layout from "../Layout";
+import Seo from "../Seo";
 import { useCart } from "../../context/CartContext";
 import { useSettings } from "../../context/SettingsContext";
 import { money } from "../format";
@@ -73,6 +74,7 @@ const Checkout = () => {
 
   return (
     <Layout>
+      <Seo title="Checkout" path="/checkout" noindex />
       <div className="aura-container py-16 grid grid-cols-1 lg:grid-cols-2 gap-12">
         <div>
           <div className="eyebrow mb-3">Almost There</div>

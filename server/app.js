@@ -104,6 +104,11 @@ app.use("/api/orders", orderRouter);
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
+// SEO: dynamic sitemap + robots (storefront URLs; driven by SITE_URL).
+const sitemapController = require("./controller/sitemap");
+app.get("/sitemap.xml", sitemapController.sitemap);
+app.get("/robots.txt", sitemapController.robots);
+
 // Friendly root so hitting the API host directly doesn't look broken.
 app.get("/", (req, res) =>
   res.json({

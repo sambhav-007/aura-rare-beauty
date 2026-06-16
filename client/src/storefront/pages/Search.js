@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Layout from "../Layout";
+import Seo from "../Seo";
 import { search } from "../../api/shop";
 import { money } from "../format";
 
@@ -25,6 +26,11 @@ const Search = () => {
 
   return (
     <Layout>
+      <Seo
+        title={q ? `Search: ${q}` : "Search"}
+        description={`Search results${q ? ` for “${q}”` : ""} at Aura Rare.`}
+        noindex
+      />
       <div className="aura-container py-16 md:py-24">
         <div className="text-center mb-16">
           <div className="eyebrow mb-3">Search</div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../Layout";
 import CategoryCard from "../CategoryCard";
 import Reveal from "../Reveal";
+import Seo from "../Seo";
 import { getCategories, getProducts } from "../../api/shop";
 
 const Collections = () => {
@@ -24,6 +25,11 @@ const Collections = () => {
 
   return (
     <Layout>
+      <Seo
+        title="Collections"
+        description="Explore every Aura Rare collection — curated cosmetics and beauty essentials, order easily over WhatsApp."
+        path="/category"
+      />
       <div className="aura-container py-16 md:py-24">
         <Reveal className="text-center mb-16">
           <div className="eyebrow mb-3">Explore</div>

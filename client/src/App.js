@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 
 import { SettingsProvider } from "./context/SettingsContext";
 import { CartProvider } from "./context/CartContext";
@@ -37,8 +38,9 @@ const AdminFallback = (
 
 function App() {
   return (
-    <SettingsProvider>
-      <CartProvider>
+    <HelmetProvider>
+      <SettingsProvider>
+        <CartProvider>
         <TopLoader />
         <Router>
           <ScrollToTop />
@@ -79,8 +81,9 @@ function App() {
             </Switch>
           </Suspense>
         </Router>
-      </CartProvider>
-    </SettingsProvider>
+        </CartProvider>
+      </SettingsProvider>
+    </HelmetProvider>
   );
 }
 

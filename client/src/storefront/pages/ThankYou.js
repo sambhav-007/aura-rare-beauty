@@ -1,12 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Layout from "../Layout";
+import Seo from "../Seo";
 import { useSettings } from "../../context/SettingsContext";
 
 const ThankYou = () => {
   const s = useSettings();
   return (
     <Layout>
+      <Seo title="Thank You" path="/thank-you" noindex />
       <div className="aura-container py-32 text-center max-w-xl">
         <div className="eyebrow mb-4">Order Sent</div>
         <h1 className="display-1 mb-6">Thank You</h1>

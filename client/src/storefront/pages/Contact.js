@@ -1,5 +1,6 @@
 import React from "react";
 import Layout from "../Layout";
+import Seo from "../Seo";
 import { useSettings } from "../../context/SettingsContext";
 
 const Row = ({ label, children }) =>
@@ -15,6 +16,11 @@ const Contact = () => {
   const wa = (s.whatsappNumber || "").replace(/\D/g, "");
   return (
     <Layout>
+      <Seo
+        title="Contact"
+        description={`Get in touch with ${s.storeName || "Aura Rare"} — reach us on WhatsApp, phone, email or social.`}
+        path="/contact"
+      />
       <div className="aura-container py-24 max-w-xl">
         <div className="text-center mb-14">
           <div className="eyebrow mb-4">Get in Touch</div>

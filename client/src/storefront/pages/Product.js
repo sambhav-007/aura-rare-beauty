@@ -4,14 +4,17 @@ import { motion } from "framer-motion";
 import Layout from "../Layout";
 import ProductCard from "../ProductCard";
 import Reveal from "../Reveal";
+import Seo from "../Seo";
 import { useCart } from "../../context/CartContext";
+import { useSettings } from "../../context/SettingsContext";
 import { getProduct, getProducts } from "../../api/shop";
-import { money, cld } from "../format";
+import { money, cld, fromPrice } from "../format";
 import Reviews from "../Reviews";
 
 const Product = () => {
   const { slug } = useParams();
   const { add } = useCart();
+  const settings = useSettings();
   const [product, setProduct] = useState(null);
   const [shades, setShades] = useState([]);
   const [sel, setSel] = useState(null);
@@ -76,8 +79,90 @@ const Product = () => {
     setTimeout(() => setAdded(false), 1800);
   };
 
+  const storeName = settings.storeName || "Aura Rare";
+  const siteUrl =
+    (process.env.REACT_APP_SITE_URL || "").replace(/\/+$/, "") ||
+    (typeof window !== "undefined" ? window.location.origin : "");
+  const lowPrice = fromPrice(shades);
+  const seoImages = gallery.length
+    ? gallery
+    : product.coverImage
+    ? [product.coverImage.url]
+    : [];
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description:
+      product.description ||
+      `${product.name} by ${storeName}${
+        shades.length ? ` — available in ${shades.length} shades.` : "."
+      }`,
+    image: seoImages,
+    brand: { "@type": "Brand", name: storeName },
+    category: product.category ? product.category.name : undefined,
+    url: siteUrl ? `${siteUrl}/product/${product.slug}` : undefined,
+    ...(lowPrice != null && shades.length
+      ? {
+          offers: {
+            "@type": "AggregateOffer",
+            priceCurrency: "INR",
+            lowPrice,
+            offerCount: shades.length,
+            availability: "https://schema.org/InStock",
+          },
+        }
+      : {}),
+    ...(product.rating && product.rating.count > 0
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: product.rating.avg,
+            reviewCount: product.rating.count,
+          },
+        }
+      : {}),
+  };
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl || undefined },
+      ...(product.category
+        ? [
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: product.category.name,
+              item: siteUrl
+                ? `${siteUrl}/category/${product.category.slug}`
+                : undefined,
+            },
+          ]
+        : []),
+      {
+        "@type": "ListItem",
+        position: product.category ? 3 : 2,
+        name: product.name,
+      },
+    ],
+  };
+
   return (
     <Layout>
+      <Seo
+        title={product.name}
+        description={
+          product.description ||
+          `${product.name} by ${storeName} — ${
+            shades.length ? `${shades.length} curated shades. ` : ""
+          }Order easily over WhatsApp.`
+        }
+        image={seoImages[0]}
+        path={`/product/${product.slug}`}
+        type="product"
+        jsonLd={[productJsonLd, breadcrumbJsonLd]}
+      />
       <div className="aura-container py-12 md:py-20 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20">
         {/* Gallery */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}>
