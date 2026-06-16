@@ -271,16 +271,27 @@ const Product = () => {
           </div>
 
           {/* Qty + Add */}
-          <div className="flex items-stretch gap-4 mb-8">
-            <div className="flex items-center border border-hairline rounded">
-              <button className="px-4 text-lg" onClick={() => setQty(Math.max(1, qty - 1))}>−</button>
-              <span className="px-4">{qty}</span>
-              <button className="px-4 text-lg" onClick={() => setQty(qty + 1)}>+</button>
+          {shades.length === 0 ? (
+            <div className="mb-8">
+              <button className="btn-outline w-full" disabled>
+                Currently Unavailable
+              </button>
+              <p className="text-xs text-muted mt-2 text-center">
+                This product is out of stock right now — check back soon.
+              </p>
             </div>
-            <button className="btn-accent flex-1" onClick={addToCart} disabled={!sel}>
-              {added ? "Added ✓" : "Add to Cart"}
-            </button>
-          </div>
+          ) : (
+            <div className="flex items-stretch gap-4 mb-8">
+              <div className="flex items-center border border-hairline rounded">
+                <button className="px-4 text-lg" onClick={() => setQty(Math.max(1, qty - 1))}>−</button>
+                <span className="px-4">{qty}</span>
+                <button className="px-4 text-lg" onClick={() => setQty(qty + 1)}>+</button>
+              </div>
+              <button className="btn-accent flex-1" onClick={addToCart} disabled={!sel}>
+                {added ? "Added ✓" : "Add to Cart"}
+              </button>
+            </div>
+          )}
 
           {product.description && (
             <div className="hairline-t pt-8">

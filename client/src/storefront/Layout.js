@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import CartDrawer from "./CartDrawer";
+import WhatsAppFab from "./WhatsAppFab";
 
 // bare = let content sit under the transparent fixed nav (used by the Home hero).
 const Layout = ({ children, bare = false }) => (
@@ -12,6 +13,7 @@ const Layout = ({ children, bare = false }) => (
       {children}
     </main>
     <Footer />
+    <WhatsAppFab />
   </div>
 );
 

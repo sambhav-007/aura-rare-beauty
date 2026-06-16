@@ -1,17 +1,24 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Layout from "../Layout";
 import Seo from "../Seo";
 import { useSettings } from "../../context/SettingsContext";
 
 const ThankYou = () => {
   const s = useSettings();
+  const ref = new URLSearchParams(useLocation().search).get("ref");
   return (
     <Layout>
       <Seo title="Thank You" path="/thank-you" noindex />
       <div className="aura-container py-32 text-center max-w-xl">
         <div className="eyebrow mb-4">Order Sent</div>
         <h1 className="display-1 mb-6">Thank You</h1>
+        {ref && (
+          <p className="text-sm mb-6">
+            Your order reference:{" "}
+            <span className="font-medium text-ink">{ref}</span>
+          </p>
+        )}
         <p className="text-muted text-lg leading-relaxed mb-4">
           Your order has been opened in WhatsApp. Please press <b>send</b> there to
           confirm it with us — we'll reply shortly to arrange delivery.

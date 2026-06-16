@@ -173,6 +173,11 @@ const Orders = () => {
               <div className="text-gray-500 whitespace-pre-line">
                 {active.customer && active.customer.address}
               </div>
+              {active.customer && active.customer.pincode && (
+                <div className="text-gray-500">
+                  Pincode: {active.customer.pincode}
+                </div>
+              )}
             </div>
 
             <div className="border-t pt-3 mb-4">

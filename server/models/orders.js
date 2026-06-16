@@ -23,6 +23,7 @@ const orderSchema = new mongoose.Schema(
       name: { type: String, default: "" },
       phone: { type: String, default: "" },
       address: { type: String, default: "" },
+      pincode: { type: String, default: "" },
     },
     total: { type: Number, default: 0 },
     paymentMethod: { type: String, default: "whatsapp" },

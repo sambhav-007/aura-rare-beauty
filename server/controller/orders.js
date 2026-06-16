@@ -20,6 +20,11 @@ class OrderController {
           .status(400)
           .json({ error: "Customer name and phone are required" });
       }
+      if (!customer.pincode || !/^\d{6}$/.test(String(customer.pincode))) {
+        return res
+          .status(400)
+          .json({ error: "A valid 6-digit pincode is required" });
+      }
       if (!Array.isArray(items) || !items.length) {
         return res.status(400).json({ error: "Order has no items" });
       }
