@@ -84,7 +84,20 @@ const Footer = () => {
       {/* Bottom bar */}
       <div className="footer-hairline">
         <div className="aura-container py-5 flex flex-wrap items-center justify-between gap-2 text-xs footer-muted tracking-wide2 uppercase">
-          <span>© {new Date().getFullYear()} {s.storeName || "Aura Rare"}</span>
+          <span>
+            © {new Date().getFullYear()} {s.storeName || "Aura Rare"}
+            {" · "}
+            Powered by{" "}
+            <a
+              href="https://www.viltrumate.live"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-link"
+              style={{ display: "inline" }}
+            >
+              Viltrumate Technologies
+            </a>
+          </span>
           <span>Crafted with care · Ordered over WhatsApp</span>
         </div>
       </div>
