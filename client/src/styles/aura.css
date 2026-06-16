@@ -290,6 +290,36 @@ textarea:focus-visible,
   100% { left: 100%; }
 }
 
+/* ---------- Nav hover flyout (desktop mega-preview) ---------- */
+.nav-flyout {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(250, 247, 242, 0.98);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--hairline);
+  box-shadow: 0 24px 40px -28px rgba(31, 31, 31, 0.45);
+  animation: navFlyIn 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes navFlyIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.nav-preview-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+.nav-preview-thumb {
+  background: var(--sand) center/cover no-repeat;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-preview-card:hover .nav-preview-thumb { transform: scale(1.05); }
+
 /* ---------- Admin action buttons (consistent gap, wraps cleanly) ---------- */
 /* Replaces space-x-2 on action cells so wrapped buttons keep vertical spacing
    too (the old cramped look) and stack full-width on phones. */
