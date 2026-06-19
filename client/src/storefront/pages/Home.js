@@ -6,6 +6,7 @@ import ProductCard from "../ProductCard";
 import CategoryCard from "../CategoryCard";
 import Reveal from "../Reveal";
 import Seo from "../Seo";
+import BannerCarousel from "../BannerCarousel";
 import { useSettings } from "../../context/SettingsContext";
 import { getCategories, getProducts, getBanners } from "../../api/shop";
 
@@ -13,7 +14,7 @@ const Home = () => {
   const s = useSettings();
   const [cats, setCats] = useState([]);
   const [products, setProducts] = useState([]);
-  const [banner, setBanner] = useState(null);
+  const [banners, setBanners] = useState([]);
   const [heroRatio, setHeroRatio] = useState(null);
 
   useEffect(() => {
@@ -21,7 +22,7 @@ const Home = () => {
       setCats((r.categories || []).filter((c) => c.status === "Active"))
     );
     getProducts().then((r) => setProducts(r.products || []));
-    getBanners().then((r) => setBanner((r.banners || [])[0] || null));
+    getBanners().then((r) => setBanners(r.banners || []));
   }, []);
 
   const counts = {};
@@ -33,23 +34,26 @@ const Home = () => {
   const bestSellers = (featured.length ? featured : products).slice(0, 4);
   const moreProducts = products.slice(0, 8);
 
-  const heroImg =
-    (s.heroImage && s.heroImage.url) || (banner && banner.image && banner.image.url);
+  // Banners drive the hero when present; otherwise the settings-based hero shows.
+  // The "Our Story" image is intentionally NOT tied to banners — only to the
+  // store's own hero image setting.
+  const hasBanners = banners.length > 0;
+  const heroImageUrl = (s.heroImage && s.heroImage.url) || null;
   const heroHeading = s.heroHeading || "Beauty That Speaks For Itself";
   const heroSub = s.heroSubheading || "Discover shades crafted for every mood.";
 
-  // Read the hero image's natural aspect ratio so the section height adapts
-  // to it (box matches the image → full image shown, no crop, no letterbox).
+  // Read the hero image's natural aspect ratio so the (settings) hero section
+  // height adapts to it — full image shown, no crop, no letterbox.
   useEffect(() => {
-    if (!heroImg) {
+    if (!heroImageUrl) {
       setHeroRatio(null);
       return;
     }
     const im = new Image();
     im.onload = () =>
       setHeroRatio(im.naturalHeight ? im.naturalWidth / im.naturalHeight : null);
-    im.src = heroImg;
-  }, [heroImg]);
+    im.src = heroImageUrl;
+  }, [heroImageUrl]);
 
   const storeName = s.storeName || "Aura Rare";
   const siteUrl =
@@ -83,63 +87,69 @@ const Home = () => {
           s.aboutUs ||
           `${storeName} — premium cosmetics & curated shades. Explore the collection and order easily over WhatsApp.`
         }
-        image={heroImg}
+        image={(hasBanners && banners[0].image && banners[0].image.url) || heroImageUrl}
         jsonLd={[orgJsonLd, siteJsonLd]}
       />
-      {/* ---------- HERO ---------- */}
-      <section
-        className={`relative flex items-center ${heroImg ? "" : "hero-fallback"}`}
-        style={{
-          // No image: full-viewport fallback. With image: box matches the
-          // image's aspect ratio (clamped) so the whole image shows, cover-filled.
-          minHeight: heroImg ? "55vh" : "100vh",
-          maxHeight: heroImg ? "100vh" : undefined,
-          aspectRatio: heroImg && heroRatio ? String(heroRatio) : undefined,
-          width: "100%",
-          backgroundColor: heroImg ? "var(--ink)" : undefined,
-          background: heroImg
-            ? `linear-gradient(90deg, rgba(31,31,31,.45) 0%, rgba(31,31,31,.15) 55%, rgba(31,31,31,0) 100%), url(${heroImg}) center/cover no-repeat var(--ink)`
-            : undefined,
-        }}
-      >
-        <div className="aura-container w-full">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-2xl"
-            style={{ color: heroImg ? "#fff" : "var(--ink)" }}
-          >
-            <div
-              className="eyebrow mb-5"
-              style={{ color: heroImg ? "#e8d6c0" : "var(--accent)" }}
-            >
-              {s.storeName || "Aura Rare"} · Rare by Nature
-            </div>
-            <h1 className="display-hero mb-6">{heroHeading}</h1>
-            <p
-              className="text-lg md:text-xl mb-10 max-w-lg"
-              style={{ color: heroImg ? "rgba(255,255,255,.9)" : "var(--muted)" }}
-            >
-              {heroSub}
-            </p>
-            <Link to="/category" className={heroImg ? "btn-accent" : "btn-ink"}>
-              Explore Collection
-            </Link>
-          </motion.div>
-        </div>
-        <div
-          className="absolute text-xs tracking-luxe uppercase"
+      {/* ---------- HERO ----------
+          When banners exist, they ARE the hero (carousel only, no site hero
+          text). With no banners, the settings-driven hero with title shows. */}
+      {hasBanners ? (
+        <BannerCarousel banners={banners} />
+      ) : (
+        <section
+          className={`relative flex items-center ${heroImageUrl ? "" : "hero-fallback"}`}
           style={{
-            bottom: 32,
-            left: "50%",
-            transform: "translateX(-50%)",
-            color: heroImg ? "rgba(255,255,255,.8)" : "var(--muted)",
+            // No image: full-viewport fallback. With image: box matches the
+            // image's aspect ratio (clamped) so the whole image shows, cover-filled.
+            minHeight: heroImageUrl ? "55vh" : "100vh",
+            maxHeight: heroImageUrl ? "100vh" : undefined,
+            aspectRatio: heroImageUrl && heroRatio ? String(heroRatio) : undefined,
+            width: "100%",
+            backgroundColor: heroImageUrl ? "var(--ink)" : undefined,
+            background: heroImageUrl
+              ? `linear-gradient(90deg, rgba(31,31,31,.45) 0%, rgba(31,31,31,.15) 55%, rgba(31,31,31,0) 100%), url(${heroImageUrl}) center/cover no-repeat var(--ink)`
+              : undefined,
           }}
         >
-          Scroll
-        </div>
-      </section>
+          <div className="aura-container w-full">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+              className="max-w-2xl"
+              style={{ color: heroImageUrl ? "#fff" : "var(--ink)" }}
+            >
+              <div
+                className="eyebrow mb-5"
+                style={{ color: heroImageUrl ? "#e8d6c0" : "var(--accent)" }}
+              >
+                {s.storeName || "Aura Rare"} · Rare by Nature
+              </div>
+              <h1 className="display-hero mb-6">{heroHeading}</h1>
+              <p
+                className="text-lg md:text-xl mb-10 max-w-lg"
+                style={{ color: heroImageUrl ? "rgba(255,255,255,.9)" : "var(--muted)" }}
+              >
+                {heroSub}
+              </p>
+              <Link to="/category" className={heroImageUrl ? "btn-accent" : "btn-ink"}>
+                Explore Collection
+              </Link>
+            </motion.div>
+          </div>
+          <div
+            className="absolute text-xs tracking-luxe uppercase"
+            style={{
+              bottom: 32,
+              left: "50%",
+              transform: "translateX(-50%)",
+              color: heroImageUrl ? "rgba(255,255,255,.8)" : "var(--muted)",
+            }}
+          >
+            Scroll
+          </div>
+        </section>
+      )}
 
       {/* ---------- FEATURED CATEGORIES ---------- */}
       {cats.length > 0 && (
@@ -186,14 +196,15 @@ const Home = () => {
               className="bg-sand img-zoom"
               style={{
                 aspectRatio: "4 / 5",
-                background:
-                  heroImg ? undefined : "linear-gradient(135deg,var(--sand),#efe6d8)",
+                background: heroImageUrl
+                  ? undefined
+                  : "linear-gradient(135deg,var(--sand),#efe6d8)",
               }}
             >
-              {heroImg && (
+              {heroImageUrl && (
                 <div
                   className="img-zoom-inner"
-                  style={{ background: `url(${heroImg}) center/cover no-repeat` }}
+                  style={{ background: `url(${heroImageUrl}) center/cover no-repeat` }}
                 />
               )}
             </div>
