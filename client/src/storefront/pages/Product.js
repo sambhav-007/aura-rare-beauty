@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Layout from "../Layout";
 import ProductCard from "../ProductCard";
 import Reveal from "../Reveal";
@@ -11,6 +11,14 @@ import { getProduct, getProducts } from "../../api/shop";
 import { money, cld, fromPrice } from "../format";
 import Reviews from "../Reviews";
 
+// Slide transition for the gallery: enter from the swipe direction, exit the
+// opposite way. dir > 0 = moving forward (next image / next shade).
+const slideVariants = {
+  enter: (dir) => ({ x: dir >= 0 ? "100%" : "-100%", opacity: 0 }),
+  center: { x: 0, opacity: 1 },
+  exit: (dir) => ({ x: dir >= 0 ? "-100%" : "100%", opacity: 0 }),
+};
+
 const Product = () => {
   const { slug } = useParams();
   const { add } = useCart();
@@ -19,10 +27,12 @@ const Product = () => {
   const [shades, setShades] = useState([]);
   const [sel, setSel] = useState(null);
   const [activeImg, setActiveImg] = useState(0);
+  const [slideDir, setSlideDir] = useState(1);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
   const [filter, setFilter] = useState("");
   const [related, setRelated] = useState([]);
+  const touchStart = useRef(null);
 
   useEffect(() => {
     setFilter("");
@@ -32,6 +42,7 @@ const Product = () => {
       const active = (r.shades || []).filter((s) => s.status !== "Disabled");
       setShades(active);
       setSel(active[0] || null);
+      setActiveImg(0);
       const catId = r.product.category && (r.product.category._id || r.product.category);
       if (catId) {
         getProducts(`?category=${catId}`).then((res) =>
@@ -49,13 +60,60 @@ const Product = () => {
     return [];
   }, [sel, product]);
 
-  useEffect(() => setActiveImg(0), [sel]);
-
   const shown = useMemo(() => {
     const q = filter.trim().toLowerCase();
     if (!q) return shades;
     return shades.filter((s) => s.name.toLowerCase().indexOf(q) > -1);
   }, [shades, filter]);
+
+  // Select a shade (from a swatch) and reset to its first image.
+  const pickShade = (sh, dir = 1) => {
+    setSlideDir(dir);
+    setSel(sh);
+    setActiveImg(0);
+  };
+
+  // Swipe navigation across a flattened sequence of every shade's images:
+  // advance through the current shade's images, then roll into the next shade.
+  const swipe = (dir) => {
+    if (!shades.length) return;
+    const idx = shades.findIndex((s) => sel && s._id === sel._id);
+    if (dir > 0) {
+      if (activeImg < gallery.length - 1) {
+        setSlideDir(1);
+        setActiveImg((i) => i + 1);
+      } else {
+        const next = shades[(idx + 1) % shades.length];
+        if (next && next._id !== sel._id) pickShade(next, 1);
+      }
+    } else {
+      if (activeImg > 0) {
+        setSlideDir(-1);
+        setActiveImg((i) => i - 1);
+      } else {
+        const prev = shades[(idx - 1 + shades.length) % shades.length];
+        if (prev && prev._id !== sel._id) {
+          const lastIdx = Math.max(0, (prev.images || []).length - 1);
+          setSlideDir(-1);
+          setSel(prev);
+          setActiveImg(lastIdx); // land on the previous shade's last image
+        }
+      }
+    }
+  };
+
+  const onTouchStart = (e) => {
+    const t = e.touches[0];
+    touchStart.current = { x: t.clientX, y: t.clientY };
+  };
+  const onTouchEnd = (e) => {
+    if (!touchStart.current) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStart.current.x;
+    const dy = t.clientY - touchStart.current.y;
+    touchStart.current = null;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) swipe(dx < 0 ? 1 : -1);
+  };
 
   if (!product)
     return <Layout><p className="text-center text-muted py-40">Loading…</p></Layout>;
@@ -164,25 +222,42 @@ const Product = () => {
         jsonLd={[productJsonLd, breadcrumbJsonLd]}
       />
       <div className="aura-container py-12 md:py-20 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20">
-        {/* Gallery */}
+        {/* Gallery — swipe across all shades' images */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}>
-          <div className="img-zoom bg-sand rounded" style={{ aspectRatio: "1 / 1" }}>
-            {gallery[activeImg] ? (
-              <img
-                src={cld(gallery[activeImg], 1000)}
-                alt={`${product.name}${sel ? ` — ${sel.name}` : ""}`}
-                className="img-zoom-inner w-full h-full object-cover"
-              />
-            ) : (
-              <div className="img-zoom-inner" />
-            )}
+          <div
+            className="bg-sand rounded"
+            style={{ aspectRatio: "1 / 1", position: "relative", overflow: "hidden", touchAction: "pan-y" }}
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+          >
+            <AnimatePresence initial={false} custom={slideDir}>
+              {gallery[activeImg] && (
+                <motion.img
+                  key={`${sel ? sel._id : "x"}-${activeImg}`}
+                  src={cld(gallery[activeImg], 1000)}
+                  alt={`${product.name}${sel ? ` — ${sel.name}` : ""}`}
+                  custom={slideDir}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                  className="w-full h-full object-cover"
+                  style={{ position: "absolute", inset: 0 }}
+                  draggable={false}
+                />
+              )}
+            </AnimatePresence>
           </div>
           {gallery.length > 1 && (
             <div className="flex gap-3 mt-4">
               {gallery.map((g, i) => (
                 <button
                   key={i}
-                  onClick={() => setActiveImg(i)}
+                  onClick={() => {
+                    setSlideDir(i >= activeImg ? 1 : -1);
+                    setActiveImg(i);
+                  }}
                   className="w-20 h-20 rounded bg-sand overflow-hidden"
                   style={{
                     boxShadow:
@@ -244,8 +319,11 @@ const Product = () => {
               />
             )}
             <div
-              className="grid gap-2.5"
-              style={{ gridTemplateColumns: "repeat(auto-fill, minmax(52px, 1fr))" }}
+              className="grid"
+              style={{
+                gridTemplateColumns: "repeat(auto-fill, minmax(52px, 1fr))",
+                gap: "0.7rem",
+              }}
             >
               {shown.map((sh) => {
                 const thumb = sh.images && sh.images[0] && sh.images[0].url;
@@ -258,7 +336,7 @@ const Product = () => {
                   <button
                     key={sh._id}
                     title={sh.name}
-                    onClick={() => setSel(sh)}
+                    onClick={() => pickShade(sh)}
                     className={`swatch ${sel && sel._id === sh._id ? "selected" : ""}`}
                     style={thumb ? { backgroundImage: `url(${cld(thumb, 120)})` } : undefined}
                   >
