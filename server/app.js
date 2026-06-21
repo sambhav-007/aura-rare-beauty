@@ -78,6 +78,10 @@ app.use(cors(origins.length ? { origin: origins } : {}));
 app.use(express.urlencoded({ extended: false, limit: "1mb" }));
 app.use(express.json({ limit: "1mb" }));
 
+// Track real traffic so the Render keep-alive bot can report idle time.
+const { startKeepAlive, activityTracker } = require("./config/keepAlive");
+app.use(activityTracker);
+
 // Rate limits: brute-force guard on login, spam guard on guest reviews.
 const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 20 });
 const reviewLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 10 });
@@ -120,4 +124,7 @@ app.get("/", (req, res) =>
 
 // Run Server
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => console.log("Server is running on", PORT));
+app.listen(PORT, () => {
+  console.log("Server is running on", PORT);
+  startKeepAlive(); // self-ping on Render to avoid idle spin-down
+});
