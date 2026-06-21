@@ -46,7 +46,9 @@ services:
     runtime: static
     rootDir: client
     branch: master
-    buildCommand: npm install && npm run build
+    # --legacy-peer-deps: the client has a known peer conflict (notistack@3
+    # wants React 17+, project is React 16). Also set in client/.npmrc.
+    buildCommand: npm install --legacy-peer-deps && npm run build
     staticPublishPath: ./build
     autoDeploy: true
     envVars:
