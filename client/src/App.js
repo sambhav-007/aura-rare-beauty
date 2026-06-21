@@ -6,6 +6,7 @@ import { SettingsProvider } from "./context/SettingsContext";
 import { CartProvider } from "./context/CartContext";
 import AdminProtectedRoute from "./components/shop/auth/AdminProtectedRoute";
 import TopLoader from "./storefront/TopLoader";
+import BusyOverlay from "./storefront/BusyOverlay";
 import ScrollToTop from "./storefront/ScrollToTop";
 
 // Storefront (customer-critical path, bundled eagerly)
@@ -42,6 +43,7 @@ function App() {
       <SettingsProvider>
         <CartProvider>
         <TopLoader />
+        <BusyOverlay />
         <Router>
           <ScrollToTop />
           <Suspense fallback={AdminFallback}>
