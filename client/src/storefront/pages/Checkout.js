@@ -35,7 +35,8 @@ const Checkout = () => {
       m += `    Qty: ${it.qty} × ${money(it.price)} = ${money(it.price * it.qty)}\n\n`;
     });
     m += `━━━━━━━━━━━━━━━\n`;
-    m += `*Total: ${money(total)}*`;
+    m += `*Subtotal: ${money(total)}*\n`;
+    m += `_+ nominal shipping charges (varies by pincode — we'll confirm)_`;
     return m;
   };
 
@@ -180,10 +181,25 @@ const Checkout = () => {
               <span className="w-20 text-right">{money(it.price * it.qty)}</span>
             </div>
           ))}
-          <div className="flex justify-between mt-4 font-medium">
-            <span>Total</span>
+          <div className="flex justify-between mt-4 text-sm">
+            <span className="text-muted">Subtotal</span>
             <span>{money(total)}</span>
           </div>
+          <div className="flex justify-between mt-2 text-sm">
+            <span className="text-muted">Shipping</span>
+            <span className="text-accent">+ Nominal (by pincode)</span>
+          </div>
+          <div className="flex justify-between mt-3 pt-3 hairline-t font-medium">
+            <span>Total</span>
+            <span>
+              {money(total)}{" "}
+              <span className="text-muted text-sm font-normal">+ shipping</span>
+            </span>
+          </div>
+          <p className="text-xs text-muted mt-3">
+            Shipping is a small charge that varies by pincode — we'll confirm it
+            with you on WhatsApp.
+          </p>
         </div>
       </div>
     </Layout>
