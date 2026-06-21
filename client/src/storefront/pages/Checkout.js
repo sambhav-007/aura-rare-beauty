@@ -21,7 +21,7 @@ const Checkout = () => {
 
   const buildMessage = (ref) => {
     const store = settings.storeName || "Aura Rare";
-    let m = `🛍️ *New Order — ${store}*\n`;
+    let m = `• *New Order — ${store}*\n`;
     if (ref) m += `*Ref:* ${ref}\n`;
     m += `━━━━━━━━━━━━━━━\n\n`;
     m += `*Customer:* ${f.name}\n`;
