@@ -1,0 +1,66 @@
+# Render Blueprint — deploys the Aura Rare stack:
+#   • aura-rare-api    : Express API (web service, free)
+#   • aura-rare-client : React storefront (static site, free, CDN — no spin-down)
+#
+# After the first apply, fill in the env vars marked "sync: false" in the Render
+# dashboard (secrets + cross-service URLs). JWT_SECRET is auto-generated.
+services:
+  # ---------- API (Express) ----------
+  - type: web
+    name: aura-rare-api
+    runtime: node
+    rootDir: server
+    plan: free
+    region: singapore
+    branch: master
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # The 8.8.8.8 DNS workaround is only needed on local Windows — disable it here.
+      - key: DNS_SERVERS
+        value: "off"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE
+        sync: false # MongoDB Atlas SRV URI
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false # e.g. https://www.aura-rare.com,https://aura-rare-client.onrender.com
+      - key: SITE_URL
+        sync: false # e.g. https://www.aura-rare.com
+      # PORT is injected by Render automatically — do NOT set it.
+      # RENDER_EXTERNAL_URL is injected too; the keep-alive bot uses it.
+
+  # ---------- Storefront (CRA static site) ----------
+  - type: web
+    name: aura-rare-client
+    runtime: static
+    rootDir: client
+    branch: master
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./build
+    autoDeploy: true
+    envVars:
+      - key: REACT_APP_API_URL
+        sync: false # the API service URL, e.g. https://aura-rare-api.onrender.com (no trailing slash, no /api)
+      - key: REACT_APP_SITE_URL
+        sync: false # e.g. https://www.aura-rare.com
+    routes:
+      # Serve sitemap.xml on the storefront domain by proxying to the API.
+      # Update the host to your actual API service URL after first deploy.
+      - type: rewrite
+        source: /sitemap.xml
+        destination: https://aura-rare-api.onrender.com/sitemap.xml
+      # SPA fallback — keep this LAST so it doesn't shadow the rule above.
+      - type: rewrite
+        source: /*
+        destination: /index.html
