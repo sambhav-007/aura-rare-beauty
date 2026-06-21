@@ -249,7 +249,11 @@ const Product = () => {
             >
               {shown.map((sh) => {
                 const thumb = sh.images && sh.images[0] && sh.images[0].url;
-                const num = sh.name.replace(/[^0-9]/g, "").slice(-2);
+                // Badge = first two letters of the shade name (e.g. "Maroon
+                // Bride 02" -> "Ma"). Numeric-only names with no letters
+                // (e.g. Mattitude "04") fall back to their digits.
+                const letters = sh.name.replace(/[^A-Za-z]/g, "").slice(0, 2);
+                const label = letters || sh.name.replace(/[^0-9]/g, "").slice(-2);
                 return (
                   <button
                     key={sh._id}
@@ -258,7 +262,7 @@ const Product = () => {
                     className={`swatch ${sel && sel._id === sh._id ? "selected" : ""}`}
                     style={thumb ? { backgroundImage: `url(${cld(thumb, 120)})` } : undefined}
                   >
-                    {!thumb && (num || sh.name.slice(0, 2))}
+                    {!thumb && label}
                   </button>
                 );
               })}
