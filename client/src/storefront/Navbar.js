@@ -106,6 +106,15 @@ const Navbar = () => {
             onMouseLeave={scheduleClose}
           >
             <Link
+              to="/"
+              className="nav-link"
+              onMouseEnter={closePreview}
+              onFocus={closePreview}
+              onClick={closePreview}
+            >
+              Home
+            </Link>
+            <Link
               to="/category"
               className="nav-link"
               onMouseEnter={() => openPreview("shop")}
@@ -384,6 +393,13 @@ const Navbar = () => {
             />
           </form>
           <nav className="flex flex-col space-y-5">
+            <Link
+              to="/"
+              className="font-display text-2xl text-ink"
+              onClick={() => setMenu(false)}
+            >
+              Home
+            </Link>
             <Link
               to="/category"
               className="font-display text-2xl text-ink"
