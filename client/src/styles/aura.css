@@ -345,9 +345,11 @@ textarea:focus-visible,
 .hero-image-hero {
   display: block;
   width: 100%;
-  max-height: 100vh;
-  background-color: var(--ink);
-  background-size: cover;
+  /* ~3/4 of the image's natural full-width height; the whole 16:9 design is
+     shown (contain) within a shorter band, cream filling the sides. */
+  height: clamp(220px, 42vw, 600px);
+  background-color: var(--cream);
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
 }

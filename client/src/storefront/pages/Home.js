@@ -15,7 +15,6 @@ const Home = () => {
   const [cats, setCats] = useState([]);
   const [products, setProducts] = useState([]);
   const [banners, setBanners] = useState([]);
-  const [heroRatio, setHeroRatio] = useState(null);
 
   useEffect(() => {
     getCategories().then((r) =>
@@ -41,19 +40,6 @@ const Home = () => {
   const heroImageUrl = (s.heroImage && s.heroImage.url) || null;
   const heroHeading = s.heroHeading || "Beauty That Speaks For Itself";
   const heroSub = s.heroSubheading || "Discover shades crafted for every mood.";
-
-  // Read the hero image's natural aspect ratio so the (settings) hero section
-  // height adapts to it — full image shown, no crop, no letterbox.
-  useEffect(() => {
-    if (!heroImageUrl) {
-      setHeroRatio(null);
-      return;
-    }
-    const im = new Image();
-    im.onload = () =>
-      setHeroRatio(im.naturalHeight ? im.naturalWidth / im.naturalHeight : null);
-    im.src = heroImageUrl;
-  }, [heroImageUrl]);
 
   const storeName = s.storeName || "Aura Rare";
   const siteUrl =
@@ -103,12 +89,7 @@ const Home = () => {
           to="/category"
           className="hero-image-hero"
           aria-label={`Shop ${storeName}`}
-          style={{
-            // Box matches the image's own aspect ratio so the whole design
-            // shows with no crop; clamped so it never exceeds the viewport.
-            aspectRatio: heroRatio ? String(heroRatio) : "16 / 9",
-            backgroundImage: `url(${heroImageUrl})`,
-          }}
+          style={{ backgroundImage: `url(${heroImageUrl})` }}
         />
       ) : (
         <section
