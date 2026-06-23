@@ -66,7 +66,7 @@ const Home = () => {
   };
 
   return (
-    <Layout bare>
+    <Layout>
       <Seo
         path="/"
         description={
