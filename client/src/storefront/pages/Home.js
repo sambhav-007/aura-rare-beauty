@@ -56,6 +56,12 @@ const Home = () => {
   }, [heroImageUrl]);
 
   const storeName = s.storeName || "Aura Rare";
+  const storeInitials = storeName
+    .split(/\s+/)
+    .map((w) => w.charAt(0))
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
   const siteUrl =
     (process.env.REACT_APP_SITE_URL || "").replace(/\/+$/, "") ||
     (typeof window !== "undefined" ? window.location.origin : "");
@@ -193,21 +199,33 @@ const Home = () => {
       <section className="section">
         <div className="aura-container grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
           <Reveal>
-            <div
-              className="bg-sand img-zoom"
-              style={{
-                aspectRatio: "4 / 5",
-                background: heroImageUrl
-                  ? undefined
-                  : "linear-gradient(135deg,var(--sand),#efe6d8)",
-              }}
-            >
-              {heroImageUrl && (
-                <div
-                  className="img-zoom-inner"
-                  style={{ background: `url(${heroImageUrl}) center/cover no-repeat` }}
-                />
-              )}
+            {/* Image-free brand panel: a wax-seal monogram, the shade palette
+                and the formula promises — looks composed with no photography. */}
+            <div className="story-panel">
+              <div className="story-panel-glow" aria-hidden="true" />
+              <div className="story-monogram" aria-hidden="true">
+                {storeName.charAt(0).toUpperCase()}
+              </div>
+              <div className="story-seal">
+                <span>{storeInitials}</span>
+              </div>
+              <div className="eyebrow" style={{ position: "relative", zIndex: 1 }}>
+                The Aura Palette
+              </div>
+              <div className="story-swatches" aria-hidden="true">
+                {["#7c2d3a", "#b5654d", "#c0392b", "#8e4b5a", "#5a2331", "#d99a6c"].map(
+                  (c) => (
+                    <span key={c} className="story-swatch" style={{ background: c }} />
+                  )
+                )}
+              </div>
+              <div className="story-pills">
+                {["Vitamin E", "12H Wear", "Cruelty-Free"].map((p) => (
+                  <span key={p} className="story-pill">
+                    {p}
+                  </span>
+                ))}
+              </div>
             </div>
           </Reveal>
           <Reveal delay={0.1}>
