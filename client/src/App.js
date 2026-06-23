@@ -8,6 +8,7 @@ import AdminProtectedRoute from "./components/shop/auth/AdminProtectedRoute";
 import TopLoader from "./storefront/TopLoader";
 import BusyOverlay from "./storefront/BusyOverlay";
 import ScrollToTop from "./storefront/ScrollToTop";
+import Preloader from "./storefront/Preloader";
 
 // Storefront (customer-critical path, bundled eagerly)
 import Home from "./storefront/pages/Home";
@@ -42,6 +43,7 @@ function App() {
     <HelmetProvider>
       <SettingsProvider>
         <CartProvider>
+        <Preloader />
         <TopLoader />
         <BusyOverlay />
         <Router>
