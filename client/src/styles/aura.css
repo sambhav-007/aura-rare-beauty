@@ -356,7 +356,7 @@ textarea:focus-visible,
 .banner-carousel {
   position: relative;
   width: 100%;
-  height: clamp(380px, 64vh, 760px);
+  height: clamp(285px, 48vh, 570px);
   background: var(--ink);
   overflow: hidden;
 }
