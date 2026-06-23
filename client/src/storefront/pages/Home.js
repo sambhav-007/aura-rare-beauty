@@ -56,12 +56,6 @@ const Home = () => {
   }, [heroImageUrl]);
 
   const storeName = s.storeName || "Aura Rare";
-  const storeInitials = storeName
-    .split(/\s+/)
-    .map((w) => w.charAt(0))
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
   const siteUrl =
     (process.env.REACT_APP_SITE_URL || "").replace(/\/+$/, "") ||
     (typeof window !== "undefined" ? window.location.origin : "");
@@ -197,45 +191,20 @@ const Home = () => {
 
       {/* ---------- BRAND STORY ---------- */}
       <section className="section">
-        <div className="aura-container grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
-          <Reveal>
-            {/* Image-free brand panel: a wax-seal monogram, the shade palette
-                and the formula promises — looks composed with no photography. */}
-            <div className="story-panel">
-              <div className="story-panel-glow" aria-hidden="true" />
-              <div className="story-monogram" aria-hidden="true">
-                {storeName.charAt(0).toUpperCase()}
-              </div>
-              <div className="story-seal">
-                <span>{storeInitials}</span>
-              </div>
-              <div className="eyebrow" style={{ position: "relative", zIndex: 1 }}>
-                The Aura Palette
-              </div>
-              <div className="story-swatches" aria-hidden="true">
-                {["#7c2d3a", "#b5654d", "#c0392b", "#8e4b5a", "#5a2331", "#d99a6c"].map(
-                  (c) => (
-                    <span key={c} className="story-swatch" style={{ background: c }} />
-                  )
-                )}
-              </div>
-              <div className="story-pills">
-                {["Vitamin E", "12H Wear", "Cruelty-Free"].map((p) => (
-                  <span key={p} className="story-pill">
-                    {p}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <div className="eyebrow mb-4">Our Story</div>
-            <h2 className="display-1 mb-6">Rare by Nature</h2>
-            <p className="text-muted text-lg leading-relaxed mb-8">
+        <div className="aura-container">
+          <Reveal className="story-block">
+            <div className="story-rule" aria-hidden="true" />
+            <div className="eyebrow mb-5">Our Story</div>
+            <h2 className="display-1 mb-7">Rare by Nature</h2>
+            <p className="text-muted leading-relaxed story-lead">
               {s.aboutUs ||
                 "Aura Rare is a premium cosmetics house crafting considered, wearable shades — made to let your natural glow lead."}
             </p>
-            <Link to="/category" className="btn-outline">Discover the Range</Link>
+            <div className="mt-10">
+              <Link to="/category" className="btn-outline">
+                Discover the Range
+              </Link>
+            </div>
           </Reveal>
         </div>
       </section>
