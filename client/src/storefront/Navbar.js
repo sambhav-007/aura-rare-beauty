@@ -87,7 +87,11 @@ const Navbar = () => {
   };
 
   return (
-    <header className={`aura-nav fixed top-0 w-full z-30 ${scrolled ? "scrolled" : ""}`}>
+    <header
+      className={`aura-nav fixed top-0 w-full z-30 ${scrolled ? "scrolled" : ""} ${
+        showSearch || hovered ? "solid" : ""
+      }`}
+    >
       <div
         className="aura-container flex items-center justify-between"
         style={{ height: scrolled ? 80 : 104, transition: "height .4s ease" }}

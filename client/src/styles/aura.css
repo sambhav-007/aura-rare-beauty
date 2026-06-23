@@ -107,11 +107,14 @@ body,
 /* ---------- Nav ---------- */
 .aura-nav {
   transition: background 0.4s ease, box-shadow 0.4s ease, height 0.4s ease;
-  background: rgba(250, 247, 242, 0.7);
-  backdrop-filter: blur(12px);
+  /* Transparent at the very top so a full-bleed hero image shows through
+     cleanly (modern cosmetic look) — frosts in once scrolled / interacting. */
+  background: transparent;
 }
-.aura-nav.scrolled {
+.aura-nav.scrolled,
+.aura-nav.solid {
   background: rgba(250, 247, 242, 0.95);
+  backdrop-filter: blur(12px);
   box-shadow: 0 1px 0 var(--hairline), 0 8px 30px -24px rgba(31, 31, 31, 0.4);
 }
 .nav-link {
@@ -318,6 +321,18 @@ textarea:focus-visible,
 }
 @keyframes busySpin {
   to { transform: rotate(360deg); }
+}
+
+/* ---------- Homepage single hero image (settings-driven) ----------
+   A self-contained designed banner: shown whole, clickable, no overlay. */
+.hero-image-hero {
+  display: block;
+  width: 100%;
+  max-height: 100vh;
+  background-color: var(--ink);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* ---------- Homepage banner carousel (hero) ---------- */

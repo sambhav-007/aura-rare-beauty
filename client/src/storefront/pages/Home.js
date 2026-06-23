@@ -91,25 +91,29 @@ const Home = () => {
         jsonLd={[orgJsonLd, siteJsonLd]}
       />
       {/* ---------- HERO ----------
-          When banners exist, they ARE the hero (carousel only, no site hero
-          text). With no banners, the settings-driven hero with title shows. */}
+          1) Active banners → auto-rotating carousel hero (no site text).
+          2) A single uploaded hero image → shown whole & clean, no overlaid
+             title/CTA (the image is a self-contained design). The transparent
+             nav floats over it instead of cropping the top.
+          3) No image → full-viewport text hero with title + CTA. */}
       {hasBanners ? (
         <BannerCarousel banners={banners} />
+      ) : heroImageUrl ? (
+        <Link
+          to="/category"
+          className="hero-image-hero"
+          aria-label={`Shop ${storeName}`}
+          style={{
+            // Box matches the image's own aspect ratio so the whole design
+            // shows with no crop; clamped so it never exceeds the viewport.
+            aspectRatio: heroRatio ? String(heroRatio) : "16 / 9",
+            backgroundImage: `url(${heroImageUrl})`,
+          }}
+        />
       ) : (
         <section
-          className={`relative flex items-center ${heroImageUrl ? "" : "hero-fallback"}`}
-          style={{
-            // No image: full-viewport fallback. With image: box matches the
-            // image's aspect ratio (clamped) so the whole image shows, cover-filled.
-            minHeight: heroImageUrl ? "55vh" : "100vh",
-            maxHeight: heroImageUrl ? "100vh" : undefined,
-            aspectRatio: heroImageUrl && heroRatio ? String(heroRatio) : undefined,
-            width: "100%",
-            backgroundColor: heroImageUrl ? "var(--ink)" : undefined,
-            background: heroImageUrl
-              ? `linear-gradient(90deg, rgba(31,31,31,.45) 0%, rgba(31,31,31,.15) 55%, rgba(31,31,31,0) 100%), url(${heroImageUrl}) center/cover no-repeat var(--ink)`
-              : undefined,
-          }}
+          className="relative flex items-center hero-fallback"
+          style={{ minHeight: "100vh", width: "100%" }}
         >
           <div className="aura-container w-full">
             <motion.div
@@ -117,22 +121,19 @@ const Home = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
               className="max-w-2xl"
-              style={{ color: heroImageUrl ? "#fff" : "var(--ink)" }}
+              style={{ color: "var(--ink)" }}
             >
-              <div
-                className="eyebrow mb-5"
-                style={{ color: heroImageUrl ? "#e8d6c0" : "var(--accent)" }}
-              >
-                {s.storeName || "Aura Rare"} · Rare by Nature
+              <div className="eyebrow mb-5" style={{ color: "var(--accent)" }}>
+                {storeName} · Rare by Nature
               </div>
               <h1 className="display-hero mb-6">{heroHeading}</h1>
               <p
                 className="text-lg md:text-xl mb-10 max-w-lg"
-                style={{ color: heroImageUrl ? "rgba(255,255,255,.9)" : "var(--muted)" }}
+                style={{ color: "var(--muted)" }}
               >
                 {heroSub}
               </p>
-              <Link to="/category" className={heroImageUrl ? "btn-accent" : "btn-ink"}>
+              <Link to="/category" className="btn-ink">
                 Explore Collection
               </Link>
             </motion.div>
@@ -143,7 +144,7 @@ const Home = () => {
               bottom: 32,
               left: "50%",
               transform: "translateX(-50%)",
-              color: heroImageUrl ? "rgba(255,255,255,.8)" : "var(--muted)",
+              color: "var(--muted)",
             }}
           >
             Scroll
