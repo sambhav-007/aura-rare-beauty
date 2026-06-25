@@ -32,11 +32,24 @@ const CountUp = ({ to, duration = 1700, start }) => {
 };
 
 const TrustStats = () => {
-  const [ref, inView] = useInView("-80px");
+  // Trigger only once the band scrolls into the middle band of the viewport,
+  // so the count-up runs on scroll-down — not while it's still parked just
+  // below the hero on first load.
+  const [ref, inView] = useInView("-40% 0px -40% 0px");
 
   return (
     <div className="trust-band" ref={ref}>
-      <div className="trust-card">
+      <div
+        className="trust-card"
+        style={{
+          // Stay hidden until the band is scrolled into view, so the starting
+          // "0" figures never flash on screen before the count-up runs.
+          opacity: inView ? 1 : 0,
+          transform: inView ? "translateY(0)" : "translateY(24px)",
+          transition:
+            "opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1)",
+        }}
+      >
         {STATS.map((s, i) => (
           <div className="trust-stat" key={s.label}>
             <div className="trust-num">

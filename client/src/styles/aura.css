@@ -326,8 +326,9 @@ textarea:focus-visible,
 .trust-band {
   position: relative;
   z-index: 2;
-  /* Clear gap below the slideshow/hero (no longer overlapping). */
-  margin-top: 3.5rem;
+  /* Generous gap below the slideshow/hero so the band sits below the fold
+     on load (paired with the card's fade-in, the 0s never flash). */
+  margin-top: 6.5rem;
   padding: 0 1.5rem;
 }
 .trust-card {
@@ -369,7 +370,7 @@ textarea:focus-visible,
   color: rgba(255, 255, 255, 0.72);
 }
 @media (max-width: 600px) {
-  .trust-band { margin-top: 2.25rem; }
+  .trust-band { margin-top: 3.5rem; }
   .trust-card { padding: 1.5rem 0.4rem; border-radius: 4px; }
   .trust-stat { padding: 0.4rem 0.35rem; }
   .trust-label { font-size: 0.58rem; letter-spacing: 0.12em; }
