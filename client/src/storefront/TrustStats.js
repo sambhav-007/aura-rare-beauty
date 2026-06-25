@@ -3,8 +3,8 @@ import useInView from "./useInView";
 
 // Believable-but-illustrative social-proof figures for the storefront.
 const STATS = [
-  { to: 12480, suffix: "+", label: "Orders Delivered" },
-  { to: 7600, suffix: "+", label: "Happy Customers" },
+  { to: 580, suffix: "+", label: "Orders Delivered" },
+  { to: 360, suffix: "+", label: "Happy Customers" },
   { to: 97, suffix: "%", label: "5-Star Reviews" },
 ];
 
