@@ -322,6 +322,59 @@ textarea:focus-visible,
   to { transform: rotate(360deg); }
 }
 
+/* ---------- Trust stats band (floats up to straddle the hero) ---------- */
+.trust-band {
+  position: relative;
+  z-index: 2;
+  /* Pull up so roughly the top half overlaps the slideshow/hero above it. */
+  margin-top: -68px;
+  padding: 0 1.5rem;
+}
+.trust-card {
+  max-width: 1040px;
+  margin: 0 auto;
+  background: var(--ink);
+  color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 34px 70px -34px rgba(31, 31, 31, 0.6);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 2.25rem 1.5rem;
+}
+.trust-stat {
+  text-align: center;
+  padding: 0.5rem 1rem;
+}
+.trust-stat + .trust-stat {
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+}
+.trust-num {
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(2.1rem, 5.2vw, 3.5rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.trust-suffix {
+  color: var(--accent);
+  margin-left: 2px;
+}
+.trust-label {
+  margin-top: 0.65rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+@media (max-width: 600px) {
+  .trust-band { margin-top: -48px; }
+  .trust-card { padding: 1.5rem 0.4rem; border-radius: 4px; }
+  .trust-stat { padding: 0.4rem 0.35rem; }
+  .trust-label { font-size: 0.58rem; letter-spacing: 0.12em; }
+}
+
 /* ---------- First-visit intro preloader (curtain lift) ---------- */
 .preloader {
   position: fixed;

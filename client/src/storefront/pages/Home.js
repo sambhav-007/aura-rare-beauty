@@ -7,6 +7,7 @@ import CategoryCard from "../CategoryCard";
 import Reveal from "../Reveal";
 import Seo from "../Seo";
 import BannerCarousel from "../BannerCarousel";
+import TrustStats from "../TrustStats";
 import { useSettings } from "../../context/SettingsContext";
 import { getCategories, getProducts, getBanners } from "../../api/shop";
 
@@ -132,6 +133,9 @@ const Home = () => {
           </div>
         </section>
       )}
+
+      {/* ---------- TRUST STATS (floats up under the hero) ---------- */}
+      <TrustStats />
 
       {/* ---------- FEATURED CATEGORIES ---------- */}
       {cats.length > 0 && (
