@@ -6,5 +6,5 @@ Disallow: /checkout
 Disallow: /thank-you
 Disallow: /cart
 
-# Update the host below to your production domain at deploy time.
-Sitemap: https://aurarare.in/sitemap.xml
+# Update the host below if your production domain changes.
+Sitemap: https://www.aura-rare.com/sitemap.xml
