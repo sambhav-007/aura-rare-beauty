@@ -477,8 +477,9 @@ textarea:focus-visible,
 .banner-carousel {
   position: relative;
   width: 100%;
-  height: clamp(285px, 48vh, 570px);
-  background: var(--ink);
+  /* Match the single hero image band; cream fills the letterbox. */
+  height: clamp(220px, 42vw, 600px);
+  background: var(--cream);
   overflow: hidden;
 }
 .banner-cell {
@@ -493,9 +494,10 @@ textarea:focus-visible,
   height: 100%;
 }
 .banner-bg {
-  background-size: cover;
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
+  background-color: var(--cream);
   display: flex;
   align-items: flex-end;
 }
