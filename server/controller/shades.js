@@ -13,6 +13,7 @@ class ShadeController {
   async getByProduct(req, res) {
     try {
       const shades = await Shade.find({ product: req.params.productId }).sort({
+        order: 1,
         _id: 1,
       });
       return res.json({ shades });
@@ -67,6 +68,8 @@ class ShadeController {
       if (badPrice(price) || badPrice(mrp) || shades.some((s) => s && (badPrice(s.price) || badPrice(s.mrp)))) {
         return res.status(400).json({ error: "Price/MRP must be a non-negative number" });
       }
+      // New shades append after any existing ones (preserve manual ordering).
+      const start = await Shade.countDocuments({ product });
       const seen = new Set();
       const docs = [];
       for (const s of shades) {
@@ -81,6 +84,7 @@ class ShadeController {
           price: s.price !== undefined ? s.price : price || 0,
           mrp: s.mrp !== undefined ? s.mrp : mrp,
           status: status || "Active",
+          order: start + docs.length,
           images: [],
         });
       }
@@ -110,6 +114,24 @@ class ShadeController {
       return res.json({ success: "Shades updated", modified: result.nModified });
     } catch (err) {
       return res.status(500).json({ error: "Failed to bulk update shades" });
+    }
+  }
+
+  // PATCH /api/shades/reorder (admin) -> persist drag order.
+  // body: { ids:[shadeId,...] } in the desired display order
+  async reorder(req, res) {
+    try {
+      const { ids } = req.body;
+      if (!Array.isArray(ids) || !ids.length) {
+        return res.status(400).json({ error: "ids list is required" });
+      }
+      const ops = ids.map((id, i) => ({
+        updateOne: { filter: { _id: id }, update: { $set: { order: i } } },
+      }));
+      await Shade.bulkWrite(ops);
+      return res.json({ success: "Order updated" });
+    } catch (err) {
+      return res.status(500).json({ error: "Failed to reorder shades" });
     }
   }
 

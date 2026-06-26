@@ -45,12 +45,17 @@ class CategoryController {
         return res.status(400).json({ error: "Name and image are required" });
       }
       const slug = await uniqueSlug(Category, name);
+      // New categories append to the end of the manual order.
+      const position =
+        order !== undefined && order !== ""
+          ? order
+          : await Category.countDocuments();
       const category = await Category.create({
         name,
         slug,
         description,
         status,
-        order,
+        order: position,
         image,
       });
       return res.json({ success: "Category created", category });
@@ -90,6 +95,24 @@ class CategoryController {
     } catch (err) {
       if (req.file) await destroyAssets(req.file.filename);
       return res.status(500).json({ error: "Failed to update category" });
+    }
+  }
+
+  // PATCH /api/categories/reorder (admin) -> persist drag order.
+  // body: { ids:[categoryId,...] } in the desired display order
+  async reorder(req, res) {
+    try {
+      const { ids } = req.body;
+      if (!Array.isArray(ids) || !ids.length) {
+        return res.status(400).json({ error: "ids list is required" });
+      }
+      const ops = ids.map((id, i) => ({
+        updateOne: { filter: { _id: id }, update: { $set: { order: i } } },
+      }));
+      await Category.bulkWrite(ops);
+      return res.json({ success: "Order updated" });
+    } catch (err) {
+      return res.status(500).json({ error: "Failed to reorder categories" });
     }
   }
 

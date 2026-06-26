@@ -46,6 +46,8 @@ export const createCategory = (obj) => post("/categories", form(obj), authForm()
 export const updateCategory = (id, obj) =>
   put(`/categories/${id}`, form(obj), authForm());
 export const deleteCategory = (id) => del(`/categories/${id}`, auth());
+export const reorderCategories = (ids) =>
+  patch("/categories/reorder", { ids }, auth());
 
 /* ---- Products ---- */
 export const getProducts = (q = "") => get(`/products${q}`);
@@ -62,6 +64,7 @@ export const getShadesByProduct = (productId) =>
 export const createShade = (obj) => post("/shades", form(obj), authForm());
 export const bulkCreateShades = (body) => post("/shades/bulk", body, auth());
 export const bulkUpdateShades = (body) => patch("/shades/bulk", body, auth());
+export const reorderShades = (ids) => patch("/shades/reorder", { ids }, auth());
 export const updateShade = (id, obj) =>
   put(`/shades/${id}`, form(obj), authForm());
 export const deleteShade = (id) => del(`/shades/${id}`, auth());

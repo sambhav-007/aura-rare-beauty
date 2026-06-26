@@ -14,6 +14,7 @@ const shadeSchema = new mongoose.Schema(
     description: { type: String, default: "" },
     images: { type: [imageSchema], default: [] },
     status: { type: String, enum: ["Active", "Disabled"], default: "Active" },
+    order: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

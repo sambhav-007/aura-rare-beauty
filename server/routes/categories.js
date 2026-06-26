@@ -8,6 +8,7 @@ const upload = makeUploader("categories");
 const admin = [loginCheck, adminCheck];
 
 router.get("/", controller.getAll);
+router.patch("/reorder", admin, controller.reorder);
 router.get("/:slug", controller.getBySlug);
 router.post("/", admin, upload.single("image"), controller.create);
 router.put("/:id", admin, upload.single("image"), controller.update);
