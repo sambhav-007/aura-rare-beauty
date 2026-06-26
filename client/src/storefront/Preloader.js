@@ -2,19 +2,12 @@ import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Logo from "./Logo";
 
-// First-visit intro curtain: a cream overlay with the logo + a gold rule,
-// then the panel lifts away to reveal the site. Shown once per browser
-// session, skipped on /admin and for users who prefer reduced motion.
-const SESSION_KEY = "aura_intro_seen";
-
+// Intro curtain: a cream overlay with the logo + a gold rule, then the panel
+// lifts away to reveal the site. Plays on every load, skipped on /admin and
+// for users who prefer reduced motion.
 const shouldPlay = () => {
   if (typeof window === "undefined") return false;
   if (window.location.pathname.startsWith("/admin")) return false;
-  try {
-    if (sessionStorage.getItem(SESSION_KEY)) return false;
-  } catch (e) {
-    /* private mode / storage blocked — just play once */
-  }
   const mq =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
   if (mq && mq.matches) return false;
@@ -26,11 +19,6 @@ const Preloader = () => {
 
   useEffect(() => {
     if (!show) return undefined;
-    try {
-      sessionStorage.setItem(SESSION_KEY, "1");
-    } catch (e) {
-      /* ignore */
-    }
     // Lock scroll while the curtain is up.
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
