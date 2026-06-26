@@ -143,12 +143,13 @@ const Navbar = () => {
         </div>
 
         {/* center: logo */}
-        <Link to="/" className="flex items-center justify-center px-4">
+        <Link to="/" className="flex flex-col items-center justify-center px-4">
           <Logo
             height={scrolled ? 52 : 68}
             fallbackName={settings.storeName || "Aura Rare"}
             className="transition-all duration-300"
           />
+          <span className="nav-powered">Powered by Navya Suhag Bindi</span>
         </Link>
 
         {/* right: actions */}

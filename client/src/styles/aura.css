@@ -116,6 +116,16 @@ body,
   background: var(--cream);
   box-shadow: 0 1px 0 var(--hairline), 0 8px 30px -24px rgba(31, 31, 31, 0.4);
 }
+.nav-powered {
+  margin-top: 2px;
+  font-size: 0.52rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  line-height: 1;
+}
+
 .nav-link {
   position: relative;
   font-size: 0.8rem;
