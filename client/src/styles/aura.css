@@ -420,11 +420,23 @@ textarea:focus-visible,
   background: var(--accent);
 }
 .preloader-tag {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+.preloader-tag-main {
   font-size: 0.72rem;
   letter-spacing: 0.32em;
   text-transform: uppercase;
   color: var(--accent-hover);
   font-weight: 500;
+}
+.preloader-tag-sub {
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 @media (prefers-reduced-motion: reduce) {
   .preloader-logo::after { display: none; }

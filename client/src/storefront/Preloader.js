@@ -72,7 +72,10 @@ const Preloader = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.95 }}
             >
-              Rare by Nature
+              <span className="preloader-tag-main">Aura Rare Beauty</span>
+              <span className="preloader-tag-sub">
+                Powered by Navya Suhag Bindi
+              </span>
             </motion.div>
           </motion.div>
         </motion.div>
