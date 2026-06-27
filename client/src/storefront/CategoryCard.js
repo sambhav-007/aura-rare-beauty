@@ -26,7 +26,7 @@ const CategoryCard = ({ category, count, index = 0, tall = false }) => {
           )}
         </div>
         <div className="overlay" />
-        <div className="absolute bottom-0 left-0 right-0 p-6 text-center text-white">
+        <div className="cat-caption absolute bottom-0 left-0 right-0 p-6 text-center text-white">
           <h3 className="font-display text-2xl md:text-3xl">{category.name}</h3>
           {count != null && (
             <div className="text-xs tracking-luxe uppercase mt-1 opacity-90">
