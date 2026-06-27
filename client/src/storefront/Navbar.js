@@ -149,7 +149,7 @@ const Navbar = () => {
             fallbackName={settings.storeName || "Aura Rare"}
             className="transition-all duration-300"
           />
-          <span className="nav-powered">Powered by Navya Suhag Bindi</span>
+          <span className="nav-powered">by Navya Suhag Bindi</span>
         </Link>
 
         {/* right: actions */}
