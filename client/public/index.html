@@ -7,6 +7,9 @@
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#1F1F1F" />
+    <!-- Cream background from the first paint so there's no white flash before
+         the React intro animation mounts. -->
+    <style>html,body{background:#faf7f2;margin:0;}</style>
     <title>Aura Rare Beauty — Premium Cosmetics, Lipstick & Nail Lacquer</title>
 
     <!-- Default meta + Open Graph / Twitter card. Serves as the fallback for
@@ -38,7 +41,9 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div class="flex flex-col min-h-screen" id="root">
       <!-- Static, crawlable fallback for non-JS crawlers. React replaces this
-           the moment the app mounts, so visitors never really see it. -->
+           the moment the app mounts. It's covered by the cream boot splash
+           below so visitors see the brand splash, not this text, before the
+           intro animation takes over. -->
       <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;background:#faf7f2;color:#1f1f1f;font-family:'Inter',system-ui,sans-serif;">
         <img src="%PUBLIC_URL%/logo.png" alt="Aura Rare Beauty — premium cosmetics, lipstick and nail lacquer" style="height:104px;width:auto;margin-bottom:1.25rem;" />
         <h1 style="font-family:'Playfair Display',Georgia,serif;font-weight:600;font-size:2rem;line-height:1.15;margin:0 0 .75rem;max-width:42rem;">Aura Rare Beauty — Premium Cosmetics &amp; Curated Shades</h1>
@@ -53,6 +58,11 @@
           <a href="/contact" style="color:#9c7349;text-decoration:none;">Contact</a>
         </nav>
         <p style="margin-top:1.75rem;color:#9ca3af;font-size:.85rem;">Loading the Aura Rare Beauty store…</p>
+      </div>
+      <!-- Opaque cream boot splash covering the fallback until the React intro
+           animation mounts (prevents the fallback text from flashing). -->
+      <div style="position:fixed;inset:0;z-index:99999;background:#faf7f2;display:flex;align-items:center;justify-content:center;">
+        <img src="%PUBLIC_URL%/logo.png" alt="" style="height:88px;width:auto;" />
       </div>
     </div>
 </body>
