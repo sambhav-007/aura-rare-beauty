@@ -45,10 +45,10 @@ const Seo = ({
   const url = abs(canonicalPath);
   const fullTitle = title
     ? `${title} · ${storeName}`
-    : `${storeName} — Premium Cosmetics & Beauty`;
+    : `${storeName} — Premium Cosmetics, Lipstick & Nail Lacquer`;
   const desc =
     description ||
-    `Discover ${storeName}: premium cosmetics, curated shades and beauty essentials. Browse the collection and order easily over WhatsApp.`;
+    `Discover ${storeName}: premium cosmetics & curated shades — lipstick, nail lacquer & beauty essentials. Browse the collection and order easily over WhatsApp.`;
   const img = abs(image) || abs("/logo.png");
 
   const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];

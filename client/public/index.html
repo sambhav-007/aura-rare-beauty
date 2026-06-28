@@ -7,21 +7,22 @@
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#1F1F1F" />
-    <title>Aura Rare — Premium Cosmetics & Beauty</title>
+    <title>Aura Rare Beauty — Premium Cosmetics, Lipstick & Nail Lacquer</title>
 
     <!-- Default meta + Open Graph / Twitter card. Serves as the fallback for
          non-JS crawlers (WhatsApp, Facebook). The data-rh="true" attribute lets
          react-helmet-async adopt and REPLACE these in-browser with per-page
          values (instead of appending duplicates). -->
-    <meta data-rh="true" name="description" content="Aura Rare — premium cosmetics & curated shades. Browse the collection and order easily over WhatsApp." />
-    <meta data-rh="true" property="og:site_name" content="Aura Rare" />
+    <meta data-rh="true" name="description" content="Aura Rare Beauty — premium cosmetics & curated shades: lipstick, nail lacquer, bindis & beauty essentials. Browse the collection and order easily over WhatsApp." />
+    <meta name="keywords" content="Aura Rare Beauty, premium cosmetics, lipstick, nail lacquer, nail paint, bindi, beauty essentials, curated shades, makeup India" />
+    <meta data-rh="true" property="og:site_name" content="Aura Rare Beauty" />
     <meta data-rh="true" property="og:type" content="website" />
-    <meta data-rh="true" property="og:title" content="Aura Rare — Premium Cosmetics & Beauty" />
-    <meta data-rh="true" property="og:description" content="Premium cosmetics & curated shades. Browse the collection and order easily over WhatsApp." />
+    <meta data-rh="true" property="og:title" content="Aura Rare Beauty — Premium Cosmetics, Lipstick & Nail Lacquer" />
+    <meta data-rh="true" property="og:description" content="Premium cosmetics & curated shades: lipstick, nail lacquer & beauty essentials. Browse the collection and order easily over WhatsApp." />
     <meta data-rh="true" property="og:image" content="%PUBLIC_URL%/logo.png" />
     <meta data-rh="true" name="twitter:card" content="summary_large_image" />
-    <meta data-rh="true" name="twitter:title" content="Aura Rare — Premium Cosmetics & Beauty" />
-    <meta data-rh="true" name="twitter:description" content="Premium cosmetics & curated shades. Browse the collection and order easily over WhatsApp." />
+    <meta data-rh="true" name="twitter:title" content="Aura Rare Beauty — Premium Cosmetics, Lipstick & Nail Lacquer" />
+    <meta data-rh="true" name="twitter:description" content="Premium cosmetics & curated shades: lipstick, nail lacquer & beauty essentials. Browse the collection and order easily over WhatsApp." />
     <meta data-rh="true" name="twitter:image" content="%PUBLIC_URL%/logo.png" />
 
     <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/style.css">
@@ -35,7 +36,25 @@
 
 <body id="page-top">
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div class="flex flex-col min-h-screen" id="root"></div>
+    <div class="flex flex-col min-h-screen" id="root">
+      <!-- Static, crawlable fallback for non-JS crawlers. React replaces this
+           the moment the app mounts, so visitors never really see it. -->
+      <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;background:#faf7f2;color:#1f1f1f;font-family:'Inter',system-ui,sans-serif;">
+        <img src="%PUBLIC_URL%/logo.png" alt="Aura Rare Beauty — premium cosmetics, lipstick and nail lacquer" style="height:104px;width:auto;margin-bottom:1.25rem;" />
+        <h1 style="font-family:'Playfair Display',Georgia,serif;font-weight:600;font-size:2rem;line-height:1.15;margin:0 0 .75rem;max-width:42rem;">Aura Rare Beauty — Premium Cosmetics &amp; Curated Shades</h1>
+        <p style="max-width:38rem;color:#6b6b6b;line-height:1.6;margin:0 0 1.75rem;">Premium lipsticks, nail lacquer, bindis and beauty essentials in considered, wearable shades. Browse the Aura Rare Beauty collection and order easily over WhatsApp.</p>
+        <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:600;font-size:1.25rem;margin:0 0 .85rem;">Shop Aura Rare Beauty by Category</h2>
+        <nav style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;font-size:.95rem;">
+          <a href="/" style="color:#9c7349;text-decoration:none;">Home</a>
+          <a href="/category" style="color:#9c7349;text-decoration:none;">Shop All Collections</a>
+          <a href="/category/lipstick" style="color:#9c7349;text-decoration:none;">Lipstick</a>
+          <a href="/category/nail-lacquer" style="color:#9c7349;text-decoration:none;">Nail Lacquer</a>
+          <a href="/about" style="color:#9c7349;text-decoration:none;">About Us</a>
+          <a href="/contact" style="color:#9c7349;text-decoration:none;">Contact</a>
+        </nav>
+        <p style="margin-top:1.75rem;color:#9ca3af;font-size:.85rem;">Loading the Aura Rare Beauty store…</p>
+      </div>
+    </div>
 </body>
 
 </html>

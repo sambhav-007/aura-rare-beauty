@@ -77,6 +77,14 @@ const Home = () => {
         image={(hasBanners && banners[0].image && banners[0].image.url) || heroImageUrl}
         jsonLd={[orgJsonLd, siteJsonLd]}
       />
+      {/* SEO H1 — the image/carousel hero shows no heading text, so provide a
+          single descriptive H1 for crawlers (visually hidden). The text-only
+          hero below renders its own visible H1 instead. */}
+      {(hasBanners || heroImageUrl) && (
+        <h1 className="sr-only">
+          {storeName} — Premium Cosmetics, Lipstick &amp; Nail Lacquer
+        </h1>
+      )}
       {/* ---------- HERO ----------
           1) Active banners → auto-rotating carousel hero (no site text).
           2) A single uploaded hero image → shown whole & clean, no overlaid
