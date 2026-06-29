@@ -7,8 +7,14 @@ const get = (u) => axios.get(`${base}${u}`).then(data).catch(fail);
 
 export const getCategories = () => get("/categories");
 export const getCategory = (slug) => get(`/categories/${slug}`);
-export const getProducts = (q = "") => get(`/products${q}`);
-export const getFeaturedProducts = () => get("/products?featured=true");
+// Storefront only ever shows Active products (disabled ones are hidden in the
+// navbar previews, home, etc.). Append status=Active to whatever query is given.
+export const getProducts = (q = "") => {
+  const sep = q.includes("?") ? "&" : "?";
+  return get(`/products${q}${sep}status=Active`);
+};
+export const getFeaturedProducts = () =>
+  get("/products?featured=true&status=Active");
 export const getProduct = (slug) => get(`/products/${slug}`);
 export const getReviewsByShade = (shadeId) => get(`/reviews/by-shade/${shadeId}`);
 export const getBanners = () => get("/banners");

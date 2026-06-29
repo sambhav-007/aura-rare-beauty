@@ -12,19 +12,24 @@ class SearchController {
       if (!q) return res.json({ shades: [], products: [], categories: [] });
       const rx = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
 
-      const [shades, products, categories] = await Promise.all([
-        Shade.find({ name: rx })
+      const [shadeMatches, products, categories] = await Promise.all([
+        Shade.find({ name: rx, status: "Active" })
           .populate({
             path: "product",
-            select: "name slug category",
+            select: "name slug category status",
             populate: { path: "category", select: "name slug" },
           })
-          .limit(20),
-        Product.find({ name: rx })
+          .limit(40),
+        Product.find({ name: rx, status: "Active" })
           .populate("category", "name slug")
           .limit(20),
-        Category.find({ name: rx }).limit(10),
+        Category.find({ name: rx, status: "Active" }).limit(10),
       ]);
+
+      // Hide shades whose parent product is disabled (or missing).
+      const shades = shadeMatches
+        .filter((s) => s.product && s.product.status === "Active")
+        .slice(0, 20);
 
       return res.json({ query: q, shades, products, categories });
     } catch (err) {

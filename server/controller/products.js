@@ -13,6 +13,8 @@ class ProductController {
       const filter = {};
       if (req.query.category) filter.category = req.query.category;
       if (req.query.featured === "true") filter.isFeatured = true;
+      // Storefront passes ?status=Active; admin omits it to see everything.
+      if (req.query.status) filter.status = req.query.status;
       // Optional pagination: ?limit=24&page=1 (defaults to everything).
       const limit = Math.min(parseInt(req.query.limit, 10) || 0, 100);
       const page = Math.max(parseInt(req.query.page, 10) || 1, 1);

@@ -73,7 +73,7 @@ const BannerCarousel = ({ banners = [] }) => {
 
   useEffect(() => {
     if (n <= 1) return undefined;
-    const t = setInterval(() => setIdx((i) => (i + 1) % n), 6000);
+    const t = setInterval(() => setIdx((i) => (i + 1) % n), 3500);
     return () => clearInterval(t);
   }, [n]);
 
